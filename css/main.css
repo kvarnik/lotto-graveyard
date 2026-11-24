@@ -1265,3 +1265,217 @@ label {
         margin-bottom: var(--spacing-sm);
     }
 }
+
+/* ===== FUNERAL MARCH REDESIGN STYLES ===== */
+
+/* Tombstone Results */
+#tombstone-container {
+    background: var(--paper);
+    border: 3px solid var(--ink);
+    border-radius: var(--radius-tombstone);
+    box-shadow: var(--shadow-card);
+    padding: 30px 20px;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.tombstone-numbers {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.tombstone-numbers .number {
+    width: 44px;
+    height: 44px;
+    border: 3px solid var(--ink);
+    border-radius: 50%;
+    background: var(--paper);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-display);
+    font-size: 16px;
+}
+
+.tombstone-numbers .number.powerball {
+    background: var(--red);
+    color: var(--paper);
+}
+
+.tombstone-epitaph {
+    font-style: italic;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--ink);
+}
+
+/* Tarot Sections */
+.prompt-container,
+#question-container,
+#card-display-container,
+#fortune-container {
+    background: var(--paper);
+    border: 3px solid var(--ink);
+    box-shadow: var(--shadow-card);
+    padding: 24px;
+    margin-bottom: 24px;
+}
+
+/* Tarot Cards */
+.tarot-card-container {
+    display: inline-block;
+    background: var(--paper);
+    border: 3px solid var(--ink);
+    box-shadow: var(--shadow-card);
+    padding: 12px;
+    margin: 8px;
+}
+
+.tarot-card-container:nth-child(1) { transform: rotate(-2deg); }
+.tarot-card-container:nth-child(2) { transform: rotate(0deg); }
+.tarot-card-container:nth-child(3) { transform: rotate(2deg); }
+
+.tarot-card img {
+    display: block;
+    width: 100%;
+    max-width: 200px;
+    height: auto;
+}
+
+.tarot-card-name {
+    margin-top: 10px;
+    font-family: var(--font-display);
+    font-size: 13px;
+    text-align: center;
+}
+
+.tarot-card-position {
+    font-size: 11px;
+    text-transform: uppercase;
+    text-align: center;
+    color: var(--ink);
+    opacity: 0.6;
+}
+
+/* Fortune Text */
+.fortune-text {
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    background: transparent;
+    border: none;
+    padding: 0;
+}
+
+/* Buttons */
+.btn-primary,
+.btn-secondary {
+    padding: 14px 24px;
+    border: 3px solid var(--ink);
+    font-family: var(--font-body);
+    font-weight: 800;
+    font-size: 16px;
+    cursor: pointer;
+    min-height: 44px;
+}
+
+.btn-primary {
+    background: var(--ink);
+    color: var(--mustard);
+    box-shadow: var(--shadow-cta);
+}
+
+.btn-secondary {
+    background: var(--paper);
+    color: var(--ink);
+}
+
+.btn-primary:focus,
+.btn-secondary:focus {
+    outline: 3px solid var(--red);
+    outline-offset: 2px;
+}
+
+/* Loading overlay */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 246, 220, 0.95);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.loading-spinner {
+    border: 4px solid var(--ink);
+    border-top-color: var(--mustard);
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Hidden utility */
+.hidden {
+    display: none !important;
+}
+
+/* Utility Classes */
+.text-center {
+    text-align: center;
+}
+
+/* Webcam Scanner */
+.webcam-scanner {
+    padding: 20px;
+}
+
+.video-container {
+    border: 3px solid var(--ink);
+    background: var(--ink);
+    margin-bottom: 16px;
+    overflow: hidden;
+}
+
+#webcam-video {
+    width: 100%;
+    display: block;
+}
+
+.scanner-controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.scanner-status,
+.scanner-fallback {
+    font-size: 14px;
+    padding: 12px;
+    background: var(--cream);
+    border: 2px solid var(--ink);
+    margin-top: 12px;
+}
+
+.link-button {
+    background: none;
+    border: none;
+    color: var(--red);
+    text-decoration: underline;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: inherit;
+    padding: 0;
+    min-height: auto;
+}
