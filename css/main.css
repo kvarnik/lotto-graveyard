@@ -1479,3 +1479,46 @@ label {
     padding: 0;
     min-height: auto;
 }
+
+/* ===== DESKTOP RESPONSIVE LAYOUT ===== */
+@media (min-width: 960px) {
+    #hero-card {
+        max-width: 480px;
+        aspect-ratio: 4 / 5;
+    }
+    
+    /* Below-fold content */
+    main {
+        max-width: 760px;
+    }
+    
+    /* Tarot cards in a row */
+    #card-display-container {
+        display: flex;
+        justify-content: center;
+        gap: 16px;
+    }
+    
+    .tarot-card-container {
+        margin: 0;
+    }
+    
+    /* Hover states */
+    @media (hover: hover) {
+        button:hover {
+            box-shadow: 6px 6px 0 var(--red);
+        }
+        
+        .btn-primary:hover {
+            box-shadow: 6px 6px 0 var(--red);
+        }
+        
+        .tarot-card-container:hover {
+            box-shadow: 6px 6px 0 var(--ink);
+        }
+        
+        #share-buttons button:hover {
+            background: var(--cream);
+        }
+    }
+}
