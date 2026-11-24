@@ -67,25 +67,157 @@ body {
     top: 0;
 }
 
-/* Header */
-header {
-    background-color: var(--color-dark-gray);
-    color: var(--color-white);
-    text-align: center;
-    padding: var(--spacing-lg) var(--spacing-sm);
-    border-bottom: 4px solid var(--color-black);
+/* Hero / Share Card */
+#hero-card {
+    background: var(--mustard);
+    border-bottom: 4px solid var(--ink);
+    padding: 18px 18px 0;
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 4 / 5;
 }
 
-header h1 {
-    font-size: clamp(2rem, 5vw, 3rem);
-    margin-bottom: var(--spacing-xs);
-    font-weight: bold;
+.hero-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 22px;
 }
 
-header .tagline {
-    font-size: clamp(1rem, 2.5vw, 1.25rem);
-    font-style: italic;
-    color: var(--color-pale-gray);
+.wordmark {
+    font-family: var(--font-display);
+    font-size: 16px;
+    color: var(--ink);
+    text-decoration: none;
+}
+
+#menu-btn {
+    width: 44px;
+    height: 44px;
+    border: 3px solid var(--ink);
+    background: var(--mustard);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--ink);
+    padding: 0;
+}
+
+#hero-card h1 {
+    font-size: 54px;
+    line-height: 0.92;
+    letter-spacing: -0.01em;
+    margin-bottom: 10px;
+}
+
+.hero-tagline {
+    font-size: 19px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.funeral-procession {
+    position: absolute;
+    left: 18px;
+    bottom: 44px;
+    width: calc(100% - 36px);
+    height: auto;
+}
+
+.funeral-ball {
+    animation: funeral-bob 2s ease-in-out infinite;
+}
+
+.funeral-ball:nth-child(2) { animation-delay: 0.1s; }
+.funeral-ball:nth-child(3) { animation-delay: 0.2s; }
+.funeral-ball:nth-child(4) { animation-delay: 0.3s; }
+.funeral-ball:nth-child(5) { animation-delay: 0.4s; }
+.funeral-ball:nth-child(6) { animation-delay: 0.5s; }
+
+@keyframes funeral-bob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .funeral-ball { animation: none; }
+}
+
+.hero-footer {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 40px;
+    background: var(--ink);
+    color: var(--mustard);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 18px;
+    font-family: var(--font-display);
+    font-size: 13px;
+}
+
+/* Share Buttons */
+#share-buttons {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    padding: 14px 18px 0;
+    background: var(--cream);
+}
+
+#share-buttons button {
+    min-height: 50px;
+    border: 3px solid var(--ink);
+    background: var(--paper);
+    font-family: var(--font-body);
+    font-weight: 800;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    padding: 0 12px;
+}
+
+#share-buttons button svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+}
+
+#share-buttons button:focus {
+    outline: 3px solid var(--red);
+    outline-offset: 2px;
+}
+
+/* Toast notification */
+.share-toast {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--paper);
+    border: 3px solid var(--ink);
+    padding: 12px 20px;
+    font-weight: 700;
+    box-shadow: var(--shadow-card);
+    animation: toast-in 0.3s, toast-out 0.3s 2.7s;
+    z-index: 1001;
+}
+
+@keyframes toast-in {
+    from { opacity: 0; transform: translate(-50%, 20px); }
+    to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+@keyframes toast-out {
+    from { opacity: 1; }
+    to { opacity: 0; }
 }
 
 /* Main Content */
@@ -106,31 +238,35 @@ main {
 }
 
 .section h2 {
-    font-size: clamp(1.5rem, 4vw, 2rem);
-    margin-bottom: var(--spacing-md);
-    text-align: center;
-    color: var(--color-black);
+    font-size: 22px;
+    margin-bottom: 16px;
+    color: var(--ink);
 }
 
 /* Footer */
 footer {
-    background-color: var(--color-dark-gray);
-    color: var(--color-white);
-    text-align: center;
-    padding: var(--spacing-md) var(--spacing-sm);
-    border-top: 4px solid var(--color-black);
+    border-top: 4px solid var(--ink);
+    background: var(--cream);
+    padding: 26px 18px 30px;
+    font-size: 14px;
+    line-height: 1.45;
     margin-top: auto;
 }
 
+footer nav {
+    display: flex;
+    gap: 18px;
+    margin-bottom: 10px;
+}
+
 footer a {
-    color: var(--color-pale-gray);
-    text-decoration: none;
+    color: var(--ink);
+    text-decoration: underline;
 }
 
 footer a:hover,
 footer a:focus {
-    text-decoration: underline;
-    color: var(--color-white);
+    color: var(--red);
 }
 
 /* Typography */
