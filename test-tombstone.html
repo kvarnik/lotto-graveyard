@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tombstone Epitaph Test</title>
+    <style>
+        body {
+            font-family: Georgia, 'Times New Roman', serif;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #e0e0e0;
+        }
+        h1, h2 {
+            color: #fff;
+            border-bottom: 2px solid #666;
+            padding-bottom: 10px;
+        }
+        .test-case {
+            background: #2a2a2a;
+            border: 2px solid #444;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .epitaph {
+            font-family: Georgia, serif;
+            white-space: pre-line;
+            line-height: 1.8;
+            padding: 20px;
+            background: #333;
+            border: 1px solid #666;
+            margin-top: 10px;
+            font-size: 16px;
+        }
+        .error {
+            color: #ff6b6b;
+            font-weight: bold;
+        }
+        button {
+            background: #444;
+            color: #fff;
+            border: 2px solid #666;
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+            font-family: Georgia, serif;
+            font-size: 14px;
+        }
+        button:hover {
+            background: #555;
+        }
+    </style>
+</head>
+<body>
+    <h1>Tombstone Epitaph Test Suite</h1>
+    <p>Testing epitaph generation with various scenarios from historical analysis.</p>
+    
+    <div id="test-results"></div>
+    
+    <script src="js/tombstone.js"></script>
+    <script>
+        // Test cases
+        const testCases = [
+            {
+                name: 'Exact Match (Won the Jackpot)',
+                data: {
+                    numbers: {
+                        whiteBalls: [5, 12, 23, 34, 45],
+                        powerball: 10
+                    },
+                    exactMatch: {
+                        drawDate: '2023-05-15',
+                        whiteBalls: [5, 12, 23, 34, 45],
+                        powerball: 10,
+                        jackpot: 450000000
+                    },
+                    closestMatch: {
+                        drawing: {
+                            drawDate: '2023-05-15',
+                            whiteBalls: [5, 12, 23, 34, 45],
+                            powerball: 10
+                        },
+                        whiteMatches: 5,
+                        powerballMatch: true
+                    },
+                    dateRange: {
+                        earliest: '2015-01-03',
+                        latest: '2024-12-31'
+                    },
+                    frequency: {
+                        whiteBalls: { 5: 15, 12: 8, 23: 12, 34: 10, 45: 7 },
+                        powerball: 6
+                    },
+                    totalDrawings: 1497
+                }
+            },
+            {
+                name: 'Never Won - Close Match (4 white + powerball)',
+                data: {
+                    numbers: {
+                        whiteBalls: [3, 15, 27, 42, 68],
+                        powerball: 22
+                    },
+                    exactMatch: null,
+                    closestMatch: {
+                        drawing: {
+                            drawDate: '2022-11-08',
+                            whiteBalls: [3, 15, 27, 42, 55],
+                            powerball: 22
+                        },
+                        whiteMatches: 4,
+                        powerballMatch: true
+                    },
+                    dateRange: {
+                        earliest: '2015-01-03',
+                        latest: '2024-12-31'
+                    },
+                    frequency: {
+                        whiteBalls: { 3: 18, 15: 14, 27: 9, 42: 11, 68: 5 },
+                        powerball: 8
+                    },
+                    totalDrawings: 1497
+                }
+            },
+            {
+                name: 'Never Won - Weak Match (2 white balls only)',
+                data: {
+                    numbers: {
+                        whiteBalls: [1, 2, 3, 4, 5],
+                        powerball: 1
+                    },
+                    exactMatch: null,
+                    closestMatch: {
+                        drawing: {
+                            drawDate: '2020-07-22',
+                            whiteBalls: [1, 2, 15, 28, 45],
+                            powerball: 15
+                        },
+                        whiteMatches: 2,
+                        powerballMatch: false
+                    },
+                    dateRange: {
+                        earliest: '2015-01-03',
+                        latest: '2024-12-31'
+                    },
+                    frequency: {
+                        whiteBalls: { 1: 20, 2: 16, 3: 14, 4: 12, 5: 18 },
+                        powerball: 10
+                    },
+                    totalDrawings: 1497
+                }
+            },
+            {
+                name: 'Never Won - No Matches',
+                data: {
+                    numbers: {
+                        whiteBalls: [7, 14, 21, 28, 35],
+                        powerball: 7
+                    },
+                    exactMatch: null,
+                    closestMatch: {
+                        drawing: {
+                            drawDate: '2019-03-10',
+                            whiteBalls: [8, 15, 22, 29, 36],
+                            powerball: 8
+                        },
+                        whiteMatches: 0,
+                        powerballMatch: false
+                    },
+                    dateRange: {
+                        earliest: '2015-01-03',
+                        latest: '2024-12-31'
+                    },
+                    frequency: {
+                        whiteBalls: { 7: 2, 14: 1, 21: 3, 28: 0, 35: 1 },
+                        powerball: 0
+                    },
+                    totalDrawings: 1497
+                }
+            },
+            {
+                name: 'Single White Ball Match + Powerball',
+                data: {
+                    numbers: {
+                        whiteBalls: [10, 20, 30, 40, 50],
+                        powerball: 15
+                    },
+                    exactMatch: null,
+                    closestMatch: {
+                        drawing: {
+                            drawDate: '2021-09-18',
+                            whiteBalls: [10, 25, 35, 45, 55],
+                            powerball: 15
+                        },
+                        whiteMatches: 1,
+                        powerballMatch: true
+                    },
+                    dateRange: {
+                        earliest: '2015-01-03',
+                        latest: '2024-12-31'
+                    },
+                    frequency: {
+                        whiteBalls: { 10: 12, 20: 11, 30: 13, 40: 9, 50: 7 },
+                        powerball: 11
+                    },
+                    totalDrawings: 1497
+                }
+            }
+        ];
+        
+        // Run tests
+        const renderer = new TombstoneRenderer();
+        const resultsContainer = document.getElementById('test-results');
+        
+        testCases.forEach((testCase, index) => {
+            const testDiv = document.createElement('div');
+            testDiv.className = 'test-case';
+            
+            const title = document.createElement('h2');
+            title.textContent = `Test ${index + 1}: ${testCase.name}`;
+            testDiv.appendChild(title);
+            
+            try {
+                const epitaph = renderer.generateEpitaph(testCase.data);
+                
+                const epitaphDiv = document.createElement('div');
+                epitaphDiv.className = 'epitaph';
+                epitaphDiv.textContent = epitaph;
+                testDiv.appendChild(epitaphDiv);
+                
+                // Add regenerate button to test variety
+                const regenButton = document.createElement('button');
+                regenButton.textContent = 'Regenerate (Test Variety)';
+                regenButton.onclick = () => {
+                    const newEpitaph = renderer.generateEpitaph(testCase.data);
+                    epitaphDiv.textContent = newEpitaph;
+                };
+                testDiv.appendChild(regenButton);
+                
+            } catch (error) {
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'error';
+                errorDiv.textContent = `ERROR: ${error.message}`;
+                testDiv.appendChild(errorDiv);
+            }
+            
+            resultsContainer.appendChild(testDiv);
+        });
+    </script>
+</body>
+</html>

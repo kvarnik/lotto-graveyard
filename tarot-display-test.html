@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tarot Card Display Test - Lotto Graveyard</title>
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+    <header role="banner">
+        <h1>Tarot Card Display Test</h1>
+        <p class="tagline">Testing Task 9.7 Implementation</p>
+    </header>
+
+    <main role="main" id="main-content">
+        <section class="section">
+            <h2 id="card-display-heading">Your Cards</h2>
+            <div id="card-display-container" role="region" aria-label="Selected tarot cards">
+                <!-- Cards will be displayed here by JavaScript -->
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>Test Controls</h2>
+            <div style="text-align: center; padding: 20px;">
+                <button id="test-display-btn" class="btn-primary">Display Test Cards</button>
+                <button id="clear-display-btn" class="btn-secondary">Clear Display</button>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>Test Information</h2>
+            <div style="max-width: 600px; margin: 0 auto; padding: 20px; background: white; border: 2px solid black;">
+                <h3>Requirements Being Tested:</h3>
+                <ul style="text-align: left;">
+                    <li><strong>Requirement 7.6:</strong> Display selected tarot cards using Rider-Waite imagery</li>
+                    <li><strong>Requirement 7.7:</strong> Display each card's name and position label</li>
+                </ul>
+                
+                <h3>Implementation Details:</h3>
+                <ul style="text-align: left;">
+                    <li>✓ Display 3 selected cards with Rider-Waite imagery</li>
+                    <li>✓ Show card names clearly</li>
+                    <li>✓ Show positions (past, present, future)</li>
+                    <li>✓ Responsive layout: 3 columns on desktop (≥768px), stacked on mobile</li>
+                    <li>✓ Uses Rider-Waite styling throughout</li>
+                    <li>✓ Proper accessibility attributes (ARIA labels, roles)</li>
+                    <li>✓ Error handling for missing images</li>
+                </ul>
+
+                <h3>Responsive Breakpoints:</h3>
+                <ul style="text-align: left;">
+                    <li><strong>Desktop (≥768px):</strong> Horizontal 3-column grid layout</li>
+                    <li><strong>Mobile (&lt;768px):</strong> Stacked vertical layout</li>
+                </ul>
+            </div>
+        </section>
+    </main>
+
+    <footer role="contentinfo">
+        <p>&copy; 2025 Lotto Graveyard. Testing tarot card display functionality.</p>
+    </footer>
+
+    <!-- Load dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/seedrandom@3/seedrandom.min.js"></script>
+    <script src="js/tarot-deck.js"></script>
+    <script src="js/tarot.js"></script>
+
+    <script>
+        // Test script
+        document.addEventListener('DOMContentLoaded', () => {
+            const tarot = new TarotModule();
+            const container = document.getElementById('card-display-container');
+            const displayBtn = document.getElementById('test-display-btn');
+            const clearBtn = document.getElementById('clear-display-btn');
+
+            // Sample lottery numbers for testing
+            const testLotteryNumbers = {
+                whiteBalls: [5, 12, 23, 34, 56],
+                powerball: 13
+            };
+
+            // Sample question
+            const testQuestion = "What does the future hold for my numbers?";
+
+            displayBtn.addEventListener('click', () => {
+                // Select cards using the deterministic algorithm
+                const selectedCards = tarot.selectCards(testLotteryNumbers, testQuestion);
+                
+                console.log('Selected cards:', selectedCards);
+                
+                // Display the cards (fortune parameter not needed for display only)
+                tarot.displayReading(selectedCards, '', container);
+                
+                // Show information about the selection
+                console.log('Card selection is deterministic:');
+                console.log('- Same lottery numbers + question = same cards every time');
+                console.log('- Seed:', tarot.createSeed(testLotteryNumbers, testQuestion));
+            });
+
+            clearBtn.addEventListener('click', () => {
+                container.innerHTML = '';
+            });
+
+            // Auto-display cards on page load for visual testing
+            setTimeout(() => {
+                displayBtn.click();
+            }, 500);
+        });
+    </script>
+</body>
+</html>

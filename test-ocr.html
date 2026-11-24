@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OCR Test - Lotto Graveyard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        .video-container {
+            position: relative;
+            width: 100%;
+            max-width: 640px;
+            margin: 20px 0;
+        }
+        video {
+            width: 100%;
+            border: 2px solid #333;
+        }
+        canvas {
+            display: none;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            background: #f0f0f0;
+            border-radius: 4px;
+        }
+        .error {
+            background: #ffebee;
+            color: #c62828;
+        }
+        .success {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+        .results {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>OCR Integration Test</h1>
+    <p>This page tests the Tesseract.js OCR integration for scanning lottery tickets.</p>
+
+    <div class="video-container">
+        <video id="webcam-video" autoplay playsinline></video>
+        <canvas id="webcam-canvas"></canvas>
+    </div>
+
+    <div class="controls">
+        <button id="start-camera-btn">Start Camera</button>
+        <button id="stop-camera-btn" disabled>Stop Camera</button>
+        <button id="scan-btn" disabled>Scan Frame</button>
+        <button id="switch-camera-btn" disabled>Switch Camera</button>
+    </div>
+
+    <div id="status" class="status"></div>
+    
+    <div id="results" class="results" style="display: none;">
+        <h3>Detected Numbers:</h3>
+        <p id="numbers-display"></p>
+    </div>
+
+    <!-- Load Tesseract.js -->
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+    
+    <!-- Load WebcamScanner -->
+    <script src="js/webcam-scanner.js"></script>
+
+    <script>
+        const scanner = new WebcamScanner();
+        const videoElement = document.getElementById('webcam-video');
+        const canvasElement = document.getElementById('webcam-canvas');
+        const statusElement = document.getElementById('status');
+        const resultsElement = document.getElementById('results');
+        const numbersDisplay = document.getElementById('numbers-display');
+
+        const startBtn = document.getElementById('start-camera-btn');
+        const stopBtn = document.getElementById('stop-camera-btn');
+        const scanBtn = document.getElementById('scan-btn');
+        const switchBtn = document.getElementById('switch-camera-btn');
+
+        // Initialize scanner
+        scanner.init(videoElement, canvasElement);
+
+        // Set callback for detected numbers
+        scanner.onNumbersDetected((numbers) => {
+            showStatus(`Numbers detected! White: ${numbers.whiteBalls.join(', ')} | Powerball: ${numbers.powerball}`, 'success');
+            showResults(numbers);
+        });
+
+        // Start camera button
+        startBtn.addEventListener('click', async () => {
+            showStatus('Starting camera...', '');
+            startBtn.disabled = true;
+            
+            try {
+                await scanner.startCamera();
+                showStatus('Camera started successfully!', 'success');
+                stopBtn.disabled = false;
+                scanBtn.disabled = false;
+                
+                // Check if device has multiple cameras
+                const hasMultiple = await scanner.hasMultipleCameras();
+                if (hasMultiple) {
+                    switchBtn.disabled = false;
+                }
+            } catch (error) {
+                showStatus(`Camera error: ${error.message}`, 'error');
+                startBtn.disabled = false;
+            }
+        });
+
+        // Stop camera button
+        stopBtn.addEventListener('click', () => {
+            scanner.stopCamera();
+            showStatus('Camera stopped', '');
+            startBtn.disabled = false;
+            stopBtn.disabled = true;
+            scanBtn.disabled = true;
+            switchBtn.disabled = true;
+        });
+
+        // Scan button
+        scanBtn.addEventListener('click', async () => {
+            showStatus('Scanning frame... This may take a few seconds.', '');
+            scanBtn.disabled = true;
+            
+            try {
+                const numbers = await scanner.scanFrame();
+                
+                if (numbers) {
+                    showStatus(`Scan complete! Found: ${numbers.whiteBalls.join(', ')} + PB ${numbers.powerball}`, 'success');
+                    showResults(numbers);
+                } else {
+                    showStatus('No valid lottery numbers detected. Try again with better lighting or position.', 'error');
+                }
+            } catch (error) {
+                showStatus(`Scan error: ${error.message}`, 'error');
+            } finally {
+                scanBtn.disabled = false;
+            }
+        });
+
+        // Switch camera button
+        switchBtn.addEventListener('click', async () => {
+            showStatus('Switching camera...', '');
+            try {
+                await scanner.switchCamera();
+                showStatus('Camera switched!', 'success');
+            } catch (error) {
+                showStatus(`Switch error: ${error.message}`, 'error');
+            }
+        });
+
+        function showStatus(message, type) {
+            statusElement.textContent = message;
+            statusElement.className = 'status';
+            if (type) {
+                statusElement.classList.add(type);
+            }
+        }
+
+        function showResults(numbers) {
+            numbersDisplay.innerHTML = `
+                <strong>White Balls:</strong> ${numbers.whiteBalls.join(', ')}<br>
+                <strong>Powerball:</strong> ${numbers.powerball}
+            `;
+            resultsElement.style.display = 'block';
+        }
+
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', async () => {
+            await scanner.cleanup();
+        });
+    </script>
+</body>
+</html>

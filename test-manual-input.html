@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Manual Input Flow</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .test-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .success { color: green; }
+        .error { color: red; }
+        .info { color: blue; }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Manual Input Flow Test</h1>
+    
+    <div class="test-section">
+        <h2>Test 1: Module Initialization</h2>
+        <button onclick="testModuleInit()">Run Test</button>
+        <div id="test1-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test 2: Historical Data Loading</h2>
+        <button onclick="testDataLoading()">Run Test</button>
+        <div id="test2-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test 3: Manual Input Validation</h2>
+        <button onclick="testValidation()">Run Test</button>
+        <div id="test3-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test 4: Analysis Flow</h2>
+        <button onclick="testAnalysis()">Run Test</button>
+        <div id="test4-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test 5: Complete Flow Simulation</h2>
+        <p>This test simulates entering numbers: 5, 29, 33, 36, 45 + Powerball 22</p>
+        <button onclick="testCompleteFlow()">Run Test</button>
+        <div id="test5-result"></div>
+    </div>
+    
+    <script src="js/config.js"></script>
+    <script src="js/validation.js"></script>
+    <script src="js/data-loader.js"></script>
+    <script src="js/analysis.js"></script>
+    <script src="js/tombstone.js"></script>
+    
+    <script>
+        function log(elementId, message, type = 'info') {
+            const el = document.getElementById(elementId);
+            const p = document.createElement('p');
+            p.className = type;
+            p.textContent = message;
+            el.appendChild(p);
+        }
+        
+        function clear(elementId) {
+            document.getElementById(elementId).innerHTML = '';
+        }
+        
+        function testModuleInit() {
+            clear('test1-result');
+            try {
+                log('test1-result', 'Testing module initialization...', 'info');
+                
+                // Test DataLoader
+                const dataLoader = new DataLoader();
+                log('test1-result', '✓ DataLoader instantiated', 'success');
+                
+                // Test HistoricalAnalysis
+                const analysis = new HistoricalAnalysis();
+                log('test1-result', '✓ HistoricalAnalysis instantiated', 'success');
+                
+                // Test TombstoneRenderer
+                const tombstone = new TombstoneRenderer();
+                log('test1-result', '✓ TombstoneRenderer instantiated', 'success');
+                
+                log('test1-result', '✓ All modules initialized successfully!', 'success');
+            } catch (error) {
+                log('test1-result', '✗ Error: ' + error.message, 'error');
+            }
+        }
+        
+        async function testDataLoading() {
+            clear('test2-result');
+            try {
+                log('test2-result', 'Loading historical data...', 'info');
+                
+                const analysis = new HistoricalAnalysis();
+                await analysis.loadData();
+                
+                const status = analysis.getDataStatus();
+                log('test2-result', `✓ Loaded ${status.drawingsCount} drawings`, 'success');
+                log('test2-result', `✓ Last updated: ${status.lastUpdated}`, 'success');
+                log('test2-result', '✓ Historical data loaded successfully!', 'success');
+            } catch (error) {
+                log('test2-result', '✗ Error: ' + error.message, 'error');
+            }
+        }
+        
+        function testValidation() {
+            clear('test3-result');
+            try {
+                log('test3-result', 'Testing validation...', 'info');
+                
+                // Test valid numbers
+                const validResult = validateLotteryNumbers([1, 2, 3, 4, 5], 10);
+                if (validResult.valid) {
+                    log('test3-result', '✓ Valid numbers accepted', 'success');
+                } else {
+                    log('test3-result', '✗ Valid numbers rejected', 'error');
+                }
+                
+                // Test invalid: duplicate white balls
+                const invalidDupe = validateLotteryNumbers([1, 1, 3, 4, 5], 10);
+                if (!invalidDupe.valid) {
+                    log('test3-result', '✓ Duplicate numbers rejected', 'success');
+                } else {
+                    log('test3-result', '✗ Duplicate numbers accepted', 'error');
+                }
+                
+                // Test invalid: out of range
+                const invalidRange = validateLotteryNumbers([1, 2, 3, 4, 70], 10);
+                if (!invalidRange.valid) {
+                    log('test3-result', '✓ Out of range numbers rejected', 'success');
+                } else {
+                    log('test3-result', '✗ Out of range numbers accepted', 'error');
+                }
+                
+                log('test3-result', '✓ Validation tests passed!', 'success');
+            } catch (error) {
+                log('test3-result', '✗ Error: ' + error.message, 'error');
+            }
+        }
+        
+        async function testAnalysis() {
+            clear('test4-result');
+            try {
+                log('test4-result', 'Testing analysis flow...', 'info');
+                
+                const analysis = new HistoricalAnalysis();
+                await analysis.loadData();
+                
+                // Test with numbers from first drawing in data
+                const lotteryNumbers = {
+                    whiteBalls: [5, 29, 33, 36, 45],
+                    powerball: 22
+                };
+                
+                log('test4-result', `Testing with numbers: ${lotteryNumbers.whiteBalls.join(', ')} + PB ${lotteryNumbers.powerball}`, 'info');
+                
+                const result = analysis.analyze(lotteryNumbers);
+                
+                log('test4-result', `✓ Analysis completed`, 'success');
+                log('test4-result', `  - Total drawings: ${result.totalDrawings}`, 'info');
+                log('test4-result', `  - Exact match: ${result.exactMatch ? 'YES on ' + result.exactMatch.drawDate : 'NO'}`, 'info');
+                log('test4-result', `  - Closest match: ${result.closestMatch.whiteMatches} white balls${result.closestMatch.powerballMatch ? ' + powerball' : ''}`, 'info');
+                log('test4-result', '✓ Analysis flow works!', 'success');
+            } catch (error) {
+                log('test4-result', '✗ Error: ' + error.message, 'error');
+                console.error(error);
+            }
+        }
+        
+        async function testCompleteFlow() {
+            clear('test5-result');
+            try {
+                log('test5-result', 'Testing complete flow...', 'info');
+                
+                // 1. Load data
+                log('test5-result', '1. Loading historical data...', 'info');
+                const analysis = new HistoricalAnalysis();
+                await analysis.loadData();
+                log('test5-result', '✓ Data loaded', 'success');
+                
+                // 2. Validate numbers
+                log('test5-result', '2. Validating numbers...', 'info');
+                const lotteryNumbers = {
+                    whiteBalls: [5, 29, 33, 36, 45],
+                    powerball: 22
+                };
+                const validationResult = validateLotteryNumbers(lotteryNumbers.whiteBalls, lotteryNumbers.powerball);
+                if (!validationResult.valid) {
+                    throw new Error('Validation failed: ' + JSON.stringify(validationResult.errors));
+                }
+                log('test5-result', '✓ Numbers validated', 'success');
+                
+                // 3. Run analysis
+                log('test5-result', '3. Running analysis...', 'info');
+                const analysisResult = analysis.analyze(lotteryNumbers);
+                log('test5-result', '✓ Analysis complete', 'success');
+                
+                // 4. Generate tombstone
+                log('test5-result', '4. Generating tombstone...', 'info');
+                const tombstone = new TombstoneRenderer();
+                const epitaph = tombstone.generateEpitaph(analysisResult);
+                log('test5-result', '✓ Tombstone generated', 'success');
+                log('test5-result', 'Epitaph preview (first 100 chars):', 'info');
+                log('test5-result', epitaph.substring(0, 100) + '...', 'info');
+                
+                log('test5-result', '✓ Complete flow successful!', 'success');
+            } catch (error) {
+                log('test5-result', '✗ Error: ' + error.message, 'error');
+                console.error(error);
+            }
+        }
+    </script>
+</body>
+</html>

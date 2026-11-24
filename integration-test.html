@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Integration Test: Analysis + Tombstone</title>
+    <style>
+        body {
+            font-family: Georgia, 'Times New Roman', serif;
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #e0e0e0;
+        }
+        h1 { color: #fff; border-bottom: 2px solid #666; padding-bottom: 10px; }
+        .section {
+            background: #2a2a2a;
+            border: 2px solid #444;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .epitaph {
+            font-family: Georgia, serif;
+            white-space: pre-line;
+            line-height: 1.8;
+            padding: 20px;
+            background: #333;
+            border: 1px solid #666;
+            margin-top: 10px;
+            font-size: 16px;
+        }
+        input {
+            font-family: Georgia, serif;
+            font-size: 16px;
+            padding: 8px;
+            margin: 5px;
+            background: #333;
+            color: #fff;
+            border: 1px solid #666;
+            width: 60px;
+        }
+        button {
+            background: #444;
+            color: #fff;
+            border: 2px solid #666;
+            padding: 10px 20px;
+            margin: 10px 5px;
+            cursor: pointer;
+            font-family: Georgia, serif;
+            font-size: 14px;
+        }
+        button:hover { background: #555; }
+        .error { color: #ff6b6b; font-weight: bold; }
+        .success { color: #51cf66; }
+        .info { color: #74c0fc; }
+    </style>
+</head>
+<body>
+    <h1>Integration Test: Historical Analysis → Tombstone Epitaph</h1>
+    
+    <div class="section">
+        <h2>Enter Lottery Numbers</h2>
+        <div>
+            <label>White Balls (1-69):</label><br>
+            <input type="number" id="wb1" min="1" max="69" value="5">
+            <input type="number" id="wb2" min="1" max="69" value="12">
+            <input type="number" id="wb3" min="1" max="69" value="23">
+            <input type="number" id="wb4" min="1" max="69" value="34">
+            <input type="number" id="wb5" min="1" max="69" value="45">
+        </div>
+        <div style="margin-top: 10px;">
+            <label>Powerball (1-26):</label><br>
+            <input type="number" id="pb" min="1" max="26" value="10">
+        </div>
+        <button onclick="runTest()">Generate Epitaph</button>
+        <button onclick="loadPreset('winner')">Load Winner Example</button>
+        <button onclick="loadPreset('loser')">Load Loser Example</button>
+    </div>
+    
+    <div class="section" id="status" style="display:none;">
+        <h2>Status</h2>
+        <div id="statusMessage"></div>
+    </div>
+    
+    <div class="section" id="results" style="display:none;">
+        <h2>Analysis Results</h2>
+        <div id="analysisOutput"></div>
+    </div>
+    
+    <div class="section" id="epitaphSection" style="display:none;">
+        <h2>Generated Epitaph</h2>
+        <div class="epitaph" id="epitaphOutput"></div>
+    </div>
+    
+    <script src="js/data-loader.js"></script>
+    <script src="js/analysis.js"></script>
+    <script src="js/tombstone.js"></script>
+    <script>
+        let analysis = null;
+        let renderer = null;
+        
+        // Presets
+        const presets = {
+            winner: { whiteBalls: [5, 12, 23, 34, 45], powerball: 10 },
+            loser: { whiteBalls: [1, 2, 3, 4, 5], powerball: 1 }
+        };
+        
+        function loadPreset(name) {
+            const preset = presets[name];
+            document.getElementById('wb1').value = preset.whiteBalls[0];
+            document.getElementById('wb2').value = preset.whiteBalls[1];
+            document.getElementById('wb3').value = preset.whiteBalls[2];
+            document.getElementById('wb4').value = preset.whiteBalls[3];
+            document.getElementById('wb5').value = preset.whiteBalls[4];
+            document.getElementById('pb').value = preset.powerball;
+        }
+        
+        function showStatus(message, type = 'info') {
+            const statusDiv = document.getElementById('status');
+            const statusMessage = document.getElementById('statusMessage');
+            statusDiv.style.display = 'block';
+            statusMessage.className = type;
+            statusMessage.textContent = message;
+        }
+        
+        async function runTest() {
+            try {
+                // Get input values
+                const whiteBalls = [
+                    parseInt(document.getElementById('wb1').value),
+                    parseInt(document.getElementById('wb2').value),
+                    parseInt(document.getElementById('wb3').value),
+                    parseInt(document.getElementById('wb4').value),
+                    parseInt(document.getElementById('wb5').value)
+                ].sort((a, b) => a - b);
+                
+                const powerball = parseInt(document.getElementById('pb').value);
+                
+                const lotteryNumbers = { whiteBalls, powerball };
+                
+                // Show status
+                showStatus('Loading historical data...', 'info');
+                
+                // Initialize analysis if needed
+                if (!analysis) {
+                    analysis = new HistoricalAnalysis();
+                    await analysis.loadData();
+                }
+                
+                showStatus('Analyzing lottery numbers...', 'info');
+                
+                // Run analysis
+                const result = analysis.analyze(lotteryNumbers);
+                
+                // Display analysis results
+                document.getElementById('results').style.display = 'block';
+                const analysisOutput = document.getElementById('analysisOutput');
+                analysisOutput.innerHTML = `
+                    <p><strong>Numbers:</strong> [${result.numbers.whiteBalls.join(', ')}] + ${result.numbers.powerball}</p>
+                    <p><strong>Total Drawings:</strong> ${result.totalDrawings}</p>
+                    <p><strong>Date Range:</strong> ${result.dateRange.earliest} to ${result.dateRange.latest}</p>
+                    <p><strong>Exact Match:</strong> ${result.exactMatch ? 'YES on ' + result.exactMatch.drawDate : 'NO'}</p>
+                    <p><strong>Closest Match:</strong> ${result.closestMatch.whiteMatches} white balls${result.closestMatch.powerballMatch ? ' + powerball' : ''} on ${result.closestMatch.drawing.drawDate}</p>
+                `;
+                
+                showStatus('Generating epitaph...', 'info');
+                
+                // Initialize renderer if needed
+                if (!renderer) {
+                    renderer = new TombstoneRenderer();
+                }
+                
+                // Generate epitaph
+                const epitaph = renderer.generateEpitaph(result);
+                
+                // Display epitaph
+                document.getElementById('epitaphSection').style.display = 'block';
+                document.getElementById('epitaphOutput').textContent = epitaph;
+                
+                showStatus('✓ Epitaph generated successfully!', 'success');
+                
+            } catch (error) {
+                showStatus('✗ Error: ' + error.message, 'error');
+                console.error('Error:', error);
+            }
+        }
+        
+        // Auto-load data on page load
+        window.addEventListener('load', async () => {
+            showStatus('Initializing...', 'info');
+            try {
+                analysis = new HistoricalAnalysis();
+                await analysis.loadData();
+                renderer = new TombstoneRenderer();
+                showStatus('✓ Ready! Enter numbers and click "Generate Epitaph"', 'success');
+            } catch (error) {
+                showStatus('⚠ Could not load historical data. Using test mode.', 'error');
+                console.error('Init error:', error);
+            }
+        });
+    </script>
+</body>
+</html>

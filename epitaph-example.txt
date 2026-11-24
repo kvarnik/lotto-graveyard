@@ -1,0 +1,113 @@
+TOMBSTONE EPITAPH EXAMPLES
+==========================
+
+Example 1: Numbers That Won
+----------------------------
+Beneath this stone slumber
+
+⟨ 5 · 12 · 23 · 34 · 45 ⟩  ✦  ⟨ 10 ⟩
+
+✦ ═══════════════ ✦
+
+These blessed numbers DID PREVAIL
+upon the fateful date of the 15th of May, 2023.
+
+Their most favorable alignment:
+five white spheres aligned, and the crimson sphere matched
+on the 15th of May, 2023
+
+Examined across 1497 drawings, from the 3rd of January, 2015 to the 31st of December, 2024.
+
+𝔉𝔯𝔢𝔮𝔲𝔢𝔫𝔠𝔶 𝔦𝔫 𝔱𝔥𝔢 𝔓𝔞𝔰𝔱 𝔜𝔢𝔞𝔯:
+
+  White sphere 5: appeared 15 times
+  White sphere 12: appeared 8 times
+  White sphere 23: appeared 12 times
+  White sphere 34: appeared 10 times
+  White sphere 45: appeared 7 times
+  Crimson sphere 10: appeared 6 times
+
+
+Example 2: Close Call (4 white + powerball)
+--------------------------------------------
+Here lie the numbers
+
+⟨ 3 · 15 · 27 · 42 · 68 ⟩  ✦  ⟨ 22 ⟩
+
+✦ ═══════════════ ✦
+
+The jackpot remained forever beyond their grasp.
+
+Their peak convergence with fate:
+four white spheres aligned, and the crimson sphere matched
+on the 8th of November, 2022
+
+Examined across 1497 drawings, from the 3rd of January, 2015 to the 31st of December, 2024.
+
+𝔉𝔯𝔢𝔮𝔲𝔢𝔫𝔠𝔶 𝔦𝔫 𝔱𝔥𝔢 𝔓𝔞𝔰𝔱 𝔜𝔢𝔞𝔯:
+
+  White sphere 3: appeared 18 times
+  White sphere 15: appeared 14 times
+  White sphere 27: appeared 9 times
+  White sphere 42: appeared 11 times
+  White sphere 68: appeared 5 times
+  Crimson sphere 22: appeared 8 times
+
+
+Example 3: Rarely Appeared
+---------------------------
+Within this hallowed vault dwell
+
+⟨ 7 · 14 · 21 · 28 · 35 ⟩  ✦  ⟨ 7 ⟩
+
+✦ ═══════════════ ✦
+
+These digits never ascended to triumph.
+
+When fortune nearly smiled:
+No white spheres aligned
+on the 10th of March, 2019
+
+Examined across 1497 drawings, from the 3rd of January, 2015 to the 31st of December, 2024.
+
+𝔉𝔯𝔢𝔮𝔲𝔢𝔫𝔠𝔶 𝔦𝔫 𝔱𝔥𝔢 𝔓𝔞𝔰𝔱 𝔜𝔢𝔞𝔯:
+
+  White sphere 7: appeared twice
+  White sphere 14: appeared but once
+  White sphere 21: appeared thrice
+  White sphere 28: appeared not at all
+  White sphere 35: appeared but once
+  Crimson sphere 7: appeared not at all
+
+
+FEATURES DEMONSTRATED
+=====================
+
+✓ Multiple opening phrase variations for variety
+✓ Prominent number display with decorative formatting
+✓ Win status (exact match vs never won) with mystical language
+✓ Closest match statistics with descriptive text
+✓ Date formatting with ordinal numbers (1st, 2nd, 3rd, etc.)
+✓ Date range with total drawings count
+✓ Frequency statistics in mystical style:
+  - "appeared not at all" (0 times)
+  - "appeared but once" (1 time)
+  - "appeared twice" (2 times)
+  - "appeared thrice" (3 times)
+  - "appeared N times" (4+ times)
+✓ White balls called "white spheres"
+✓ Powerball called "crimson sphere"
+✓ 1909 Rider-Waite graveyard-themed aesthetic
+✓ Decorative dividers and unicode formatting
+✓ Error handling for invalid inputs
+
+REQUIREMENTS MET
+================
+
+✓ 4.3 - Epitaph summarizes historical performance
+✓ 4.4 - Includes whether numbers ever won
+✓ 4.5 - Includes closest near-miss statistics
+✓ 4.6 - Includes date range analyzed
+✓ 4.7 - Includes frequency statistics for each number
+✓ Multiple epitaph variations for variety
+✓ Mystical/graveyard language fitting the theme

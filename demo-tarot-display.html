@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task 9.7 Demo: Tarot Card Display</title>
+    <link rel="stylesheet" href="css/main.css">
+    <style>
+        .demo-controls {
+            max-width: 800px;
+            margin: 0 auto 40px;
+            padding: 20px;
+            background: white;
+            border: 2px solid #333;
+            border-radius: 4px;
+        }
+        
+        .demo-info {
+            background: #f5f5f5;
+            padding: 15px;
+            margin: 20px 0;
+            border-left: 4px solid #333;
+        }
+        
+        .input-group {
+            margin-bottom: 15px;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        .input-group input,
+        .input-group textarea {
+            width: 100%;
+            padding: 8px;
+            border: 2px solid #666;
+            border-radius: 4px;
+        }
+        
+        .number-inputs {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .number-inputs input {
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .powerball-input {
+            background-color: #f0f0f0;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .status {
+            text-align: center;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .requirement-check {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 8px;
+        }
+        
+        .requirement-check.met {
+            border-color: #28a745;
+            background: #f0fff4;
+        }
+        
+        .check-icon {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .check-icon.met {
+            color: #28a745;
+        }
+    </style>
+</head>
+<body>
+    <header role="banner">
+        <h1>Task 9.7 Implementation Demo</h1>
+        <p class="tagline">Tarot Card Display with Rider-Waite Imagery</p>
+    </header>
+
+    <main role="main" id="main-content">
+        <!-- Demo Controls -->
+        <section class="section">
+            <div class="demo-controls">
+                <h2>Interactive Demo</h2>
+                
+                <div class="demo-info">
+                    <strong>Instructions:</strong> Enter your lottery numbers and question below, then click "Display Tarot Cards" to see the implementation in action.
+                </div>
+                
+                <div class="input-group">
+                    <label>White Ball Numbers (1-69) + Powerball (1-26)</label>
+                    <div class="number-inputs">
+                        <input type="number" id="white1" min="1" max="69" value="5" placeholder="1-69">
+                        <input type="number" id="white2" min="1" max="69" value="12" placeholder="1-69">
+                        <input type="number" id="white3" min="1" max="69" value="23" placeholder="1-69">
+                        <input type="number" id="white4" min="1" max="69" value="34" placeholder="1-69">
+                        <input type="number" id="white5" min="1" max="69" value="56" placeholder="1-69">
+                        <input type="number" id="powerball" min="1" max="26" value="13" placeholder="PB" class="powerball-input">
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="question">Your Question (1-200 characters)</label>
+                    <textarea id="question" maxlength="200" rows="3">What does the future hold for my numbers?</textarea>
+                    <small id="char-count">45 / 200 characters</small>
+                </div>
+                
+                <div class="button-group">
+                    <button id="display-btn" class="btn-primary">Display Tarot Cards</button>
+                    <button id="random-btn" class="btn-secondary">Random Numbers</button>
+                    <button id="clear-btn" class="btn-secondary">Clear Display</button>
+                </div>
+                
+                <div id="status" class="status" style="display: none;"></div>
+            </div>
+        </section>
+
+        <!-- Requirements Checklist -->
+        <section class="section">
+            <h2>Requirements Verification</h2>
+            <div style="max-width: 800px; margin: 0 auto;">
+                <div class="requirement-check met">
+                    <span class="check-icon met">✓</span>
+                    <div>
+                        <strong>Requirement 7.6:</strong> Display selected tarot cards using Rider-Waite imagery
+                        <div style="font-size: 0.9em; color: #666;">Cards use authentic 1909 Rider-Waite images from assets/tarot/</div>
+                    </div>
+                </div>
+                
+                <div class="requirement-check met">
+                    <span class="check-icon met">✓</span>
+                    <div>
+                        <strong>Requirement 7.7:</strong> Display each card's name and position label
+                        <div style="font-size: 0.9em; color: #666;">Card names and positions (Past, Present, Future) clearly displayed</div>
+                    </div>
+                </div>
+                
+                <div class="requirement-check met">
+                    <span class="check-icon met">✓</span>
+                    <div>
+                        <strong>Responsive Layout:</strong> 3 columns on desktop, stacked on mobile
+                        <div style="font-size: 0.9em; color: #666;">Breakpoint at 768px - try resizing your browser window</div>
+                    </div>
+                </div>
+                
+                <div class="requirement-check met">
+                    <span class="check-icon met">✓</span>
+                    <div>
+                        <strong>Accessibility:</strong> ARIA labels, semantic HTML, screen reader friendly
+                        <div style="font-size: 0.9em; color: #666;">role="region", aria-label, proper alt text</div>
+                    </div>
+                </div>
+                
+                <div class="requirement-check met">
+                    <span class="check-icon met">✓</span>
+                    <div>
+                        <strong>Deterministic Selection:</strong> Same inputs always produce same cards
+                        <div style="font-size: 0.9em; color: #666;">Uses seeded RNG with lottery numbers + question</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Card Display Section -->
+        <section id="card-display-section" class="section">
+            <h2 id="card-display-heading">Your Tarot Cards</h2>
+            <div id="card-display-container" role="region" aria-label="Selected tarot cards">
+                <!-- Cards will be displayed here -->
+            </div>
+        </section>
+
+        <!-- Technical Details -->
+        <section class="section">
+            <h2>Technical Implementation</h2>
+            <div style="max-width: 800px; margin: 0 auto; padding: 20px; background: white; border: 2px solid #333;">
+                <h3>Sub-tasks Completed:</h3>
+                <ul>
+                    <li>✓ Complete tarot card display functionality in <code>js/tarot.js</code></li>
+                    <li>✓ Display 3 selected cards with Rider-Waite imagery</li>
+                    <li>✓ Show card names and positions (past, present, future)</li>
+                    <li>✓ Apply responsive layout for card display</li>
+                </ul>
+                
+                <h3>Features:</h3>
+                <ul>
+                    <li><strong>Responsive Design:</strong> Desktop (3-column grid) and mobile (stacked) layouts</li>
+                    <li><strong>Accessibility:</strong> ARIA roles, labels, semantic HTML, keyboard navigation</li>
+                    <li><strong>Error Handling:</strong> Graceful fallback for missing images</li>
+                    <li><strong>Performance:</strong> Lazy loading, minimal DOM manipulation</li>
+                    <li><strong>Rider-Waite Styling:</strong> Consistent grayscale theme throughout</li>
+                </ul>
+                
+                <h3>Method Signature:</h3>
+                <pre style="background: #f5f5f5; padding: 15px; border-radius: 4px; overflow-x: auto;">
+displayReading(cards, fortune, containerElement)
+  - cards: Array of 3 card objects with name, imageUrl, position
+  - fortune: Fortune text (reserved for Task 10)
+  - containerElement: DOM element for rendering</pre>
+            </div>
+        </section>
+    </main>
+
+    <footer role="contentinfo">
+        <p>&copy; 2025 Lotto Graveyard - Task 9.7 Demo</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/seedrandom@3/seedrandom.min.js"></script>
+    <script src="js/tarot-deck.js"></script>
+    <script src="js/tarot.js"></script>
+
+    <script>
+        // Initialize
+        const tarot = new TarotModule();
+        const container = document.getElementById('card-display-container');
+        const section = document.getElementById('card-display-section');
+        const statusEl = document.getElementById('status');
+        const questionInput = document.getElementById('question');
+        const charCount = document.getElementById('char-count');
+        
+        // Update character count
+        questionInput.addEventListener('input', () => {
+            charCount.textContent = `${questionInput.value.length} / 200 characters`;
+        });
+        
+        // Get lottery numbers from inputs
+        function getLotteryNumbers() {
+            return {
+                whiteBalls: [
+                    parseInt(document.getElementById('white1').value),
+                    parseInt(document.getElementById('white2').value),
+                    parseInt(document.getElementById('white3').value),
+                    parseInt(document.getElementById('white4').value),
+                    parseInt(document.getElementById('white5').value)
+                ],
+                powerball: parseInt(document.getElementById('powerball').value)
+            };
+        }
+        
+        // Display cards button
+        document.getElementById('display-btn').addEventListener('click', () => {
+            try {
+                const lotteryNumbers = getLotteryNumbers();
+                const question = questionInput.value.trim();
+                
+                // Validate
+                if (question.length === 0) {
+                    alert('Please enter a question');
+                    return;
+                }
+                
+                // Select and display cards
+                const cards = tarot.selectCards(lotteryNumbers, question);
+                tarot.displayReading(cards, '', container);
+                
+                // Show section
+                section.classList.remove('hidden');
+                
+                // Show success status
+                statusEl.textContent = `✓ Displayed 3 cards: ${cards.map(c => c.name).join(', ')}`;
+                statusEl.className = 'status success';
+                statusEl.style.display = 'block';
+                
+                // Log details
+                console.log('Selected cards:', cards);
+                console.log('Seed:', tarot.createSeed(lotteryNumbers, question));
+                
+                // Scroll to cards
+                setTimeout(() => {
+                    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
+            } catch (error) {
+                alert('Error: ' + error.message);
+                console.error(error);
+            }
+        });
+        
+        // Random numbers button
+        document.getElementById('random-btn').addEventListener('click', () => {
+            document.getElementById('white1').value = Math.floor(Math.random() * 69) + 1;
+            document.getElementById('white2').value = Math.floor(Math.random() * 69) + 1;
+            document.getElementById('white3').value = Math.floor(Math.random() * 69) + 1;
+            document.getElementById('white4').value = Math.floor(Math.random() * 69) + 1;
+            document.getElementById('white5').value = Math.floor(Math.random() * 69) + 1;
+            document.getElementById('powerball').value = Math.floor(Math.random() * 26) + 1;
+        });
+        
+        // Clear button
+        document.getElementById('clear-btn').addEventListener('click', () => {
+            container.innerHTML = '';
+            section.classList.add('hidden');
+            statusEl.style.display = 'none';
+        });
+        
+        // Auto-display on load
+        setTimeout(() => {
+            document.getElementById('display-btn').click();
+        }, 500);
+    </script>
+</body>
+</html>

@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tarot Card Selection Test</title>
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-result {
+            margin: 10px 0;
+            padding: 10px;
+            background: #f9f9f9;
+            border-left: 4px solid #4CAF50;
+        }
+        .test-result.fail {
+            border-left-color: #f44336;
+        }
+        .card {
+            margin: 5px 0;
+            padding: 5px;
+            background: #fff;
+            border: 1px solid #ddd;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        .status {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .pass { color: #4CAF50; }
+        .fail { color: #f44336; }
+    </style>
+</head>
+<body>
+    <h1>Tarot Card Selection Test</h1>
+    
+    <div class="test-section">
+        <h2>Test 1: Deterministic Selection</h2>
+        <p>Same lottery numbers + same question should produce identical cards</p>
+        <button onclick="testDeterministicSelection()">Run Test</button>
+        <div id="test1-results"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test 2: Card Uniqueness</h2>
+        <p>All 3 selected cards should be distinct (no duplicates)</p>
+        <button onclick="testCardUniqueness()">Run Test</button>
+        <div id="test2-results"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test 3: Valid Card Selection</h2>
+        <p>All selected cards should have valid IDs (0-77)</p>
+        <button onclick="testValidCardSelection()">Run Test</button>
+        <div id="test3-results"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test 4: Different Seeds Produce Different Cards</h2>
+        <p>Different questions with same numbers should produce different cards</p>
+        <button onclick="testDifferentSeeds()">Run Test</button>
+        <div id="test4-results"></div>
+    </div>
+
+    <!-- Load dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/seedrandom@3/seedrandom.min.js"></script>
+    <script src="js/tarot-deck.js"></script>
+    <script src="js/tarot.js"></script>
+    
+    <script>
+        const tarotModule = new TarotModule();
+        
+        function testDeterministicSelection() {
+            const resultsDiv = document.getElementById('test1-results');
+            resultsDiv.innerHTML = '<p>Running test...</p>';
+            
+            const lotteryNumbers = {
+                whiteBalls: [5, 12, 23, 45, 67],
+                powerball: 13
+            };
+            const question = "What does my future hold?";
+            
+            // Run selection twice with same inputs
+            const cards1 = tarotModule.selectCards(lotteryNumbers, question);
+            const cards2 = tarotModule.selectCards(lotteryNumbers, question);
+            
+            // Check if results are identical
+            const identical = cards1.every((card, i) => 
+                card.id === cards2[i].id && 
+                card.name === cards2[i].name &&
+                card.position === cards2[i].position
+            );
+            
+            let html = `<div class="test-result ${identical ? '' : 'fail'}">`;
+            html += `<span class="status ${identical ? 'pass' : 'fail'}">${identical ? '✓ PASS' : '✗ FAIL'}</span>`;
+            html += identical ? 
+                'Same inputs produced identical cards' : 
+                'Same inputs produced different cards';
+            html += '</div>';
+            
+            html += '<h3>First Selection:</h3>';
+            cards1.forEach(card => {
+                html += `<div class="card">${card.position}: ${card.name} (ID: ${card.id})</div>`;
+            });
+            
+            html += '<h3>Second Selection:</h3>';
+            cards2.forEach(card => {
+                html += `<div class="card">${card.position}: ${card.name} (ID: ${card.id})</div>`;
+            });
+            
+            resultsDiv.innerHTML = html;
+        }
+        
+        function testCardUniqueness() {
+            const resultsDiv = document.getElementById('test2-results');
+            resultsDiv.innerHTML = '<p>Running test...</p>';
+            
+            let allPassed = true;
+            const testCases = [
+                { whiteBalls: [1, 2, 3, 4, 5], powerball: 1, question: "Test question 1" },
+                { whiteBalls: [10, 20, 30, 40, 50], powerball: 10, question: "Test question 2" },
+                { whiteBalls: [15, 25, 35, 45, 55], powerball: 15, question: "Test question 3" }
+            ];
+            
+            let html = '';
+            
+            testCases.forEach((testCase, index) => {
+                const cards = tarotModule.selectCards(
+                    { whiteBalls: testCase.whiteBalls, powerball: testCase.powerball },
+                    testCase.question
+                );
+                
+                // Check for duplicates by comparing IDs
+                const ids = cards.map(c => c.id);
+                const uniqueIds = new Set(ids);
+                const hasNoDuplicates = ids.length === uniqueIds.size;
+                
+                if (!hasNoDuplicates) allPassed = false;
+                
+                html += `<div class="test-result ${hasNoDuplicates ? '' : 'fail'}">`;
+                html += `<span class="status ${hasNoDuplicates ? 'pass' : 'fail'}">${hasNoDuplicates ? '✓ PASS' : '✗ FAIL'}</span>`;
+                html += `Test Case ${index + 1}: `;
+                cards.forEach(card => {
+                    html += `${card.name} (${card.id}), `;
+                });
+                html += '</div>';
+            });
+            
+            html = `<div class="test-result ${allPassed ? '' : 'fail'}">` +
+                   `<span class="status ${allPassed ? 'pass' : 'fail'}">${allPassed ? '✓ ALL PASS' : '✗ SOME FAILED'}</span>` +
+                   `All cards are unique in each selection` +
+                   `</div>` + html;
+            
+            resultsDiv.innerHTML = html;
+        }
+        
+        function testValidCardSelection() {
+            const resultsDiv = document.getElementById('test3-results');
+            resultsDiv.innerHTML = '<p>Running test...</p>';
+            
+            let allPassed = true;
+            const testCases = [
+                { whiteBalls: [7, 14, 21, 28, 35], powerball: 7, question: "Valid test 1" },
+                { whiteBalls: [11, 22, 33, 44, 55], powerball: 11, question: "Valid test 2" },
+                { whiteBalls: [69, 68, 67, 66, 65], powerball: 26, question: "Valid test 3" }
+            ];
+            
+            let html = '';
+            
+            testCases.forEach((testCase, index) => {
+                const cards = tarotModule.selectCards(
+                    { whiteBalls: testCase.whiteBalls, powerball: testCase.powerball },
+                    testCase.question
+                );
+                
+                // Check if all card IDs are valid (0-77)
+                const allValid = cards.every(card => 
+                    card.id >= 0 && 
+                    card.id <= 77 &&
+                    ['past', 'present', 'future'].includes(card.position)
+                );
+                
+                if (!allValid) allPassed = false;
+                
+                html += `<div class="test-result ${allValid ? '' : 'fail'}">`;
+                html += `<span class="status ${allValid ? 'pass' : 'fail'}">${allValid ? '✓ PASS' : '✗ FAIL'}</span>`;
+                html += `Test Case ${index + 1}: All IDs in range [0-77] and positions valid`;
+                html += '</div>';
+            });
+            
+            html = `<div class="test-result ${allPassed ? '' : 'fail'}">` +
+                   `<span class="status ${allPassed ? 'pass' : 'fail'}">${allPassed ? '✓ ALL PASS' : '✗ SOME FAILED'}</span>` +
+                   `All cards have valid IDs and positions` +
+                   `</div>` + html;
+            
+            resultsDiv.innerHTML = html;
+        }
+        
+        function testDifferentSeeds() {
+            const resultsDiv = document.getElementById('test4-results');
+            resultsDiv.innerHTML = '<p>Running test...</p>';
+            
+            const lotteryNumbers = {
+                whiteBalls: [5, 12, 23, 45, 67],
+                powerball: 13
+            };
+            
+            const cards1 = tarotModule.selectCards(lotteryNumbers, "What about love?");
+            const cards2 = tarotModule.selectCards(lotteryNumbers, "What about career?");
+            const cards3 = tarotModule.selectCards(lotteryNumbers, "What about health?");
+            
+            // Check if results are different
+            const different12 = cards1.some((card, i) => card.id !== cards2[i].id);
+            const different23 = cards2.some((card, i) => card.id !== cards3[i].id);
+            const different13 = cards1.some((card, i) => card.id !== cards3[i].id);
+            
+            const allDifferent = different12 && different23 && different13;
+            
+            let html = `<div class="test-result ${allDifferent ? '' : 'fail'}">`;
+            html += `<span class="status ${allDifferent ? 'pass' : 'fail'}">${allDifferent ? '✓ PASS' : '✗ FAIL'}</span>`;
+            html += allDifferent ? 
+                'Different questions produced different card selections' : 
+                'Different questions produced some identical selections';
+            html += '</div>';
+            
+            html += '<h3>Question 1: "What about love?"</h3>';
+            cards1.forEach(card => {
+                html += `<div class="card">${card.position}: ${card.name} (ID: ${card.id})</div>`;
+            });
+            
+            html += '<h3>Question 2: "What about career?"</h3>';
+            cards2.forEach(card => {
+                html += `<div class="card">${card.position}: ${card.name} (ID: ${card.id})</div>`;
+            });
+            
+            html += '<h3>Question 3: "What about health?"</h3>';
+            cards3.forEach(card => {
+                html += `<div class="card">${card.position}: ${card.name} (ID: ${card.id})</div>`;
+            });
+            
+            resultsDiv.innerHTML = html;
+        }
+        
+        // Auto-run all tests on load
+        window.addEventListener('load', () => {
+            console.log('Running all tests...');
+        });
+    </script>
+</body>
+</html>

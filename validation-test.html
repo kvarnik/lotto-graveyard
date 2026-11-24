@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validation Test Page</title>
+    <style>
+        body {
+            font-family: Georgia, serif;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        input {
+            width: 60px;
+            padding: 8px;
+            border: 2px solid #999;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        input.error {
+            border-color: #c00;
+            background-color: #fff0f0;
+        }
+        
+        .white-balls-inputs {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .white-balls-inputs > div {
+            flex: 1;
+        }
+        
+        .error-message {
+            display: none;
+            color: #c00;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        
+        .error-message.visible {
+            display: block;
+        }
+        
+        button {
+            background-color: #333;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        
+        button:hover {
+            background-color: #555;
+        }
+        
+        .text-center {
+            text-align: center;
+        }
+        
+        #form-error {
+            font-weight: bold;
+        }
+        
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+        
+        .powerball-input input {
+            width: 100px;
+        }
+        
+        .test-buttons {
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 2px solid #ccc;
+        }
+        
+        .test-buttons h2 {
+            color: #666;
+        }
+        
+        .test-buttons button {
+            margin: 5px;
+            background-color: #666;
+            font-size: 14px;
+            padding: 8px 16px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Validation Test Page</h1>
+    
+    <form id="manual-input-form" class="manual-input-form" novalidate>
+        <!-- White Ball Inputs -->
+        <div class="form-group">
+            <label for="white-ball-1">
+                White Ball Numbers (1-69)
+                <span class="sr-only">Enter 5 unique numbers between 1 and 69</span>
+            </label>
+            <div class="white-balls-inputs">
+                <div>
+                    <label for="white-ball-1" class="sr-only">White Ball 1</label>
+                    <input 
+                        type="number" 
+                        id="white-ball-1" 
+                        name="white-ball-1"
+                        min="1" 
+                        max="69" 
+                        required
+                        aria-required="true"
+                        aria-invalid="false"
+                        aria-describedby="white-ball-1-error"
+                        placeholder="1-69"
+                    >
+                    <span id="white-ball-1-error" class="error-message" role="alert" aria-live="polite"></span>
+                </div>
+                <div>
+                    <label for="white-ball-2" class="sr-only">White Ball 2</label>
+                    <input 
+                        type="number" 
+                        id="white-ball-2" 
+                        name="white-ball-2"
+                        min="1" 
+                        max="69" 
+                        required
+                        aria-required="true"
+                        aria-invalid="false"
+                        aria-describedby="white-ball-2-error"
+                        placeholder="1-69"
+                    >
+                    <span id="white-ball-2-error" class="error-message" role="alert" aria-live="polite"></span>
+                </div>
+                <div>
+                    <label for="white-ball-3" class="sr-only">White Ball 3</label>
+                    <input 
+                        type="number" 
+                        id="white-ball-3" 
+                        name="white-ball-3"
+                        min="1" 
+                        max="69" 
+                        required
+                        aria-required="true"
+                        aria-invalid="false"
+                        aria-describedby="white-ball-3-error"
+                        placeholder="1-69"
+                    >
+                    <span id="white-ball-3-error" class="error-message" role="alert" aria-live="polite"></span>
+                </div>
+                <div>
+                    <label for="white-ball-4" class="sr-only">White Ball 4</label>
+                    <input 
+                        type="number" 
+                        id="white-ball-4" 
+                        name="white-ball-4"
+                        min="1" 
+                        max="69" 
+                        required
+                        aria-required="true"
+                        aria-invalid="false"
+                        aria-describedby="white-ball-4-error"
+                        placeholder="1-69"
+                    >
+                    <span id="white-ball-4-error" class="error-message" role="alert" aria-live="polite"></span>
+                </div>
+                <div>
+                    <label for="white-ball-5" class="sr-only">White Ball 5</label>
+                    <input 
+                        type="number" 
+                        id="white-ball-5" 
+                        name="white-ball-5"
+                        min="1" 
+                        max="69" 
+                        required
+                        aria-required="true"
+                        aria-invalid="false"
+                        aria-describedby="white-ball-5-error"
+                        placeholder="1-69"
+                    >
+                    <span id="white-ball-5-error" class="error-message" role="alert" aria-live="polite"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Powerball Input -->
+        <div class="form-group powerball-input">
+            <label for="powerball">
+                Powerball Number (1-26)
+            </label>
+            <input 
+                type="number" 
+                id="powerball" 
+                name="powerball"
+                min="1" 
+                max="26" 
+                required
+                aria-required="true"
+                aria-invalid="false"
+                aria-describedby="powerball-error"
+                placeholder="1-26"
+            >
+            <span id="powerball-error" class="error-message" role="alert" aria-live="polite"></span>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="form-group text-center">
+            <button type="submit" id="submit-numbers-btn">
+                Validate Numbers
+            </button>
+        </div>
+
+        <!-- General form errors -->
+        <div id="form-error" class="error-message text-center" role="alert" aria-live="polite"></div>
+    </form>
+    
+    <!-- Test Scenario Buttons -->
+    <div class="test-buttons">
+        <h2>Test Scenarios</h2>
+        <button type="button" onclick="fillValid()">Valid Numbers</button>
+        <button type="button" onclick="fillDuplicates()">Duplicate White Balls</button>
+        <button type="button" onclick="fillOutOfRange()">Out of Range</button>
+        <button type="button" onclick="fillTooFew()">Too Few White Balls</button>
+        <button type="button" onclick="fillMissingPowerball()">Missing Powerball</button>
+        <button type="button" onclick="clearForm()">Clear Form</button>
+    </div>
+    
+    <script src="js/validation.js"></script>
+    <script>
+        // Form submission handler
+        document.getElementById('manual-input-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Collect white balls
+            const whiteBalls = [];
+            for (let i = 1; i <= 5; i++) {
+                const value = document.getElementById(`white-ball-${i}`).value;
+                if (value !== '') {
+                    whiteBalls.push(parseInt(value, 10));
+                }
+            }
+            
+            // Collect powerball
+            const powerballValue = document.getElementById('powerball').value;
+            const powerball = powerballValue !== '' ? parseInt(powerballValue, 10) : null;
+            
+            // Validate
+            const result = validateLotteryNumbers(whiteBalls, powerball);
+            
+            // Display errors
+            displayValidationErrors(result);
+            
+            // If valid, show success message
+            if (result.valid) {
+                alert('✓ Valid lottery numbers!');
+            }
+        });
+        
+        // Test scenario functions
+        function fillValid() {
+            clearForm();
+            document.getElementById('white-ball-1').value = '5';
+            document.getElementById('white-ball-2').value = '12';
+            document.getElementById('white-ball-3').value = '25';
+            document.getElementById('white-ball-4').value = '42';
+            document.getElementById('white-ball-5').value = '68';
+            document.getElementById('powerball').value = '15';
+        }
+        
+        function fillDuplicates() {
+            clearForm();
+            document.getElementById('white-ball-1').value = '5';
+            document.getElementById('white-ball-2').value = '5';
+            document.getElementById('white-ball-3').value = '25';
+            document.getElementById('white-ball-4').value = '25';
+            document.getElementById('white-ball-5').value = '68';
+            document.getElementById('powerball').value = '15';
+        }
+        
+        function fillOutOfRange() {
+            clearForm();
+            document.getElementById('white-ball-1').value = '0';
+            document.getElementById('white-ball-2').value = '12';
+            document.getElementById('white-ball-3').value = '25';
+            document.getElementById('white-ball-4').value = '42';
+            document.getElementById('white-ball-5').value = '100';
+            document.getElementById('powerball').value = '30';
+        }
+        
+        function fillTooFew() {
+            clearForm();
+            document.getElementById('white-ball-1').value = '5';
+            document.getElementById('white-ball-2').value = '12';
+            document.getElementById('powerball').value = '15';
+        }
+        
+        function fillMissingPowerball() {
+            clearForm();
+            document.getElementById('white-ball-1').value = '5';
+            document.getElementById('white-ball-2').value = '12';
+            document.getElementById('white-ball-3').value = '25';
+            document.getElementById('white-ball-4').value = '42';
+            document.getElementById('white-ball-5').value = '68';
+        }
+        
+        function clearForm() {
+            document.getElementById('manual-input-form').reset();
+            clearValidationErrors();
+        }
+    </script>
+</body>
+</html>

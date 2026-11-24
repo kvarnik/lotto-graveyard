@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DataLoader Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .test-section h3 {
+            margin-top: 0;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+        }
+        .success {
+            color: green;
+        }
+        .error {
+            color: red;
+        }
+        .info {
+            color: blue;
+        }
+        pre {
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 3px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>DataLoader Test Suite</h1>
+    
+    <div class="test-section">
+        <h3>Test 1: Load Historical Data</h3>
+        <button onclick="testLoadData()">Run Test</button>
+        <div id="test1-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>Test 2: Verify Caching</h3>
+        <button onclick="testCaching()">Run Test</button>
+        <div id="test2-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>Test 3: Cache Validity</h3>
+        <button onclick="testCacheValidity()">Run Test</button>
+        <div id="test3-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>Test 4: Error Handling</h3>
+        <button onclick="testErrorHandling()">Run Test</button>
+        <div id="test4-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>Test 5: Data Validation</h3>
+        <button onclick="testDataValidation()">Run Test</button>
+        <div id="test5-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>Cache Status</h3>
+        <button onclick="showCacheStatus()">Show Status</button>
+        <button onclick="clearCache()">Clear Cache</button>
+        <div id="cache-status"></div>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="data-loader.js"></script>
+    
+    <script>
+        const loader = new DataLoader();
+        
+        function log(elementId, message, type = 'info') {
+            const element = document.getElementById(elementId);
+            const className = type === 'error' ? 'error' : (type === 'success' ? 'success' : 'info');
+            element.innerHTML += `<p class="${className}">${message}</p>`;
+        }
+        
+        function clearLog(elementId) {
+            document.getElementById(elementId).innerHTML = '';
+        }
+        
+        async function testLoadData() {
+            clearLog('test1-result');
+            log('test1-result', 'Loading historical data...', 'info');
+            
+            try {
+                const data = await loader.loadHistoricalData();
+                log('test1-result', '✓ Data loaded successfully', 'success');
+                log('test1-result', `Total drawings: ${data.totalDrawings}`, 'info');
+                log('test1-result', `Last updated: ${data.lastUpdated}`, 'info');
+                log('test1-result', `Drawings count: ${data.drawings.length}`, 'info');
+                
+                if (data.drawings.length > 0) {
+                    log('test1-result', 'First drawing:', 'info');
+                    document.getElementById('test1-result').innerHTML += 
+                        `<pre>${JSON.stringify(data.drawings[0], null, 2)}</pre>`;
+                }
+            } catch (error) {
+                log('test1-result', '✗ Error: ' + error.message, 'error');
+            }
+        }
+        
+        async function testCaching() {
+            clearLog('test2-result');
+            log('test2-result', 'Testing caching mechanism...', 'info');
+            
+            try {
+                // Clear cache first
+                loader.clearCache();
+                log('test2-result', 'Cache cleared', 'info');
+                
+                // First load - should fetch from server
+                log('test2-result', 'First load (from server)...', 'info');
+                const start1 = performance.now();
+                const data1 = await loader.loadHistoricalData();
+                const time1 = (performance.now() - start1).toFixed(2);
+                log('test2-result', `✓ Loaded in ${time1}ms`, 'success');
+                
+                // Second load - should use cache
+                log('test2-result', 'Second load (from cache)...', 'info');
+                const start2 = performance.now();
+                const data2 = await loader.loadHistoricalData();
+                const time2 = (performance.now() - start2).toFixed(2);
+                log('test2-result', `✓ Loaded in ${time2}ms`, 'success');
+                
+                // Verify data is the same
+                if (data1.totalDrawings === data2.totalDrawings) {
+                    log('test2-result', '✓ Cached data matches original', 'success');
+                } else {
+                    log('test2-result', '✗ Cached data does not match', 'error');
+                }
+                
+                log('test2-result', `Speed improvement: ${(time1 / time2).toFixed(1)}x faster`, 'info');
+                
+            } catch (error) {
+                log('test2-result', '✗ Error: ' + error.message, 'error');
+            }
+        }
+        
+        function testCacheValidity() {
+            clearLog('test3-result');
+            log('test3-result', 'Testing cache validity...', 'info');
+            
+            try {
+                const cached = loader.getCachedData();
+                
+                if (!cached) {
+                    log('test3-result', 'No cached data found (load data first)', 'info');
+                    return;
+                }
+                
+                const isValid = loader.isCacheValid(cached);
+                log('test3-result', `Cache validity: ${isValid ? 'VALID' : 'INVALID'}`, 
+                    isValid ? 'success' : 'error');
+                
+                const status = loader.getCacheStatus();
+                log('test3-result', 'Cache status:', 'info');
+                document.getElementById('test3-result').innerHTML += 
+                    `<pre>${JSON.stringify(status, null, 2)}</pre>`;
+                
+            } catch (error) {
+                log('test3-result', '✗ Error: ' + error.message, 'error');
+            }
+        }
+        
+        async function testErrorHandling() {
+            clearLog('test4-result');
+            log('test4-result', 'Testing error handling...', 'info');
+            
+            try {
+                // Test with invalid path
+                const badLoader = new DataLoader();
+                badLoader.dataFilePath = '/nonexistent/path.json';
+                
+                try {
+                    await badLoader.loadHistoricalData();
+                    log('test4-result', '✗ Should have thrown error', 'error');
+                } catch (error) {
+                    log('test4-result', '✓ Error caught correctly: ' + error.message, 'success');
+                }
+                
+            } catch (error) {
+                log('test4-result', '✗ Unexpected error: ' + error.message, 'error');
+            }
+        }
+        
+        function testDataValidation() {
+            clearLog('test5-result');
+            log('test5-result', 'Testing data validation...', 'info');
+            
+            const testCases = [
+                {
+                    name: 'Valid data',
+                    data: {
+                        lastUpdated: '2024-01-01T00:00:00Z',
+                        totalDrawings: 100,
+                        drawings: [
+                            {
+                                drawDate: '2024-01-01',
+                                whiteBalls: [1, 2, 3, 4, 5],
+                                powerball: 10
+                            }
+                        ]
+                    },
+                    shouldPass: true
+                },
+                {
+                    name: 'Missing lastUpdated',
+                    data: {
+                        totalDrawings: 100,
+                        drawings: []
+                    },
+                    shouldPass: false
+                },
+                {
+                    name: 'Invalid totalDrawings',
+                    data: {
+                        lastUpdated: '2024-01-01T00:00:00Z',
+                        totalDrawings: 'not a number',
+                        drawings: []
+                    },
+                    shouldPass: false
+                },
+                {
+                    name: 'Missing drawings array',
+                    data: {
+                        lastUpdated: '2024-01-01T00:00:00Z',
+                        totalDrawings: 100
+                    },
+                    shouldPass: false
+                }
+            ];
+            
+            testCases.forEach(test => {
+                try {
+                    loader.validateData(test.data);
+                    if (test.shouldPass) {
+                        log('test5-result', `✓ ${test.name}: PASS`, 'success');
+                    } else {
+                        log('test5-result', `✗ ${test.name}: Should have failed`, 'error');
+                    }
+                } catch (error) {
+                    if (!test.shouldPass) {
+                        log('test5-result', `✓ ${test.name}: Correctly rejected`, 'success');
+                    } else {
+                        log('test5-result', `✗ ${test.name}: ${error.message}`, 'error');
+                    }
+                }
+            });
+        }
+        
+        function showCacheStatus() {
+            clearLog('cache-status');
+            const status = loader.getCacheStatus();
+            document.getElementById('cache-status').innerHTML = 
+                `<pre>${JSON.stringify(status, null, 2)}</pre>`;
+        }
+        
+        function clearCache() {
+            loader.clearCache();
+            clearLog('cache-status');
+            log('cache-status', '✓ Cache cleared successfully', 'success');
+        }
+    </script>
+</body>
+</html>

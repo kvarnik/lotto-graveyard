@@ -1,0 +1,32 @@
+{
+  "name": "lotto-graveyard",
+  "version": "1.0.0",
+  "description": "A web application that analyzes Powerball lottery numbers and provides mystical tarot readings",
+  "main": "index.html",
+  "scripts": {
+    "fetch-data": "node scripts/fetch-powerball-data.js",
+    "serve": "npx http-server -p 8000 -c-1",
+    "deploy:github": "./scripts/deploy-github-pages.sh",
+    "deploy:s3": "./scripts/deploy-s3.sh",
+    "test": "echo \"Tests will be implemented in later tasks\" && exit 0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/lotto-graveyard.git"
+  },
+  "keywords": [
+    "lottery",
+    "powerball",
+    "tarot",
+    "analysis",
+    "mystical"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  },
+  "dependencies": {
+    "seedrandom": "^3.0.5"
+  }
+}

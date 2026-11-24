@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS Styling Test - Lotto Graveyard</title>
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+    <header role="banner">
+        <h1>Lotto Graveyard</h1>
+        <p class="tagline">Where lottery dreams find their final rest</p>
+    </header>
+
+    <main role="main" id="main-content">
+        <!-- Test Tombstone Component -->
+        <section class="section">
+            <h2>Tombstone Component Test</h2>
+            <div class="tombstone">
+                <div class="tombstone-header">
+                    <h3>Here Lie Your Numbers</h3>
+                </div>
+                <div class="tombstone-numbers">
+                    <span class="white-balls">05 12 23 34 56</span>
+                    <span class="powerball">13</span>
+                </div>
+                <div class="tombstone-epitaph">
+<strong>These numbers never won the jackpot.</strong>
+
+Closest: 3 white balls on January 15, 2024
+
+Analyzed: January 1, 2023 to January 15, 2025
+
+<strong>Past Year Frequency:</strong>
+  Ball 05: 12 times
+  Ball 12: 8 times
+  Ball 23: 15 times
+  Ball 34: 10 times
+  Ball 56: 6 times
+  Powerball 13: 9 times
+                </div>
+            </div>
+        </section>
+
+        <!-- Test Form Components -->
+        <section class="section">
+            <h2>Form Components Test</h2>
+            <div class="manual-input-form">
+                <div class="form-group">
+                    <label for="test-input">White Ball Numbers</label>
+                    <div class="white-balls-inputs">
+                        <input type="number" min="1" max="69" placeholder="1-69">
+                        <input type="number" min="1" max="69" placeholder="1-69">
+                        <input type="number" min="1" max="69" placeholder="1-69">
+                        <input type="number" min="1" max="69" placeholder="1-69">
+                        <input type="number" min="1" max="69" placeholder="1-69">
+                    </div>
+                </div>
+                <div class="form-group powerball-input">
+                    <label for="powerball">Powerball Number</label>
+                    <input type="number" id="powerball" min="1" max="26" placeholder="1-26">
+                </div>
+                <button type="submit">Analyze Numbers</button>
+            </div>
+        </section>
+
+        <!-- Test Touch Targets -->
+        <section class="section">
+            <h2>Touch Target Test (All 44px min)</h2>
+            <div style="text-align: center;">
+                <button>Button 1</button>
+                <button>Button 2</button>
+                <button>Button 3</button>
+            </div>
+        </section>
+
+        <!-- Test Tarot Cards -->
+        <section class="section">
+            <h2>Tarot Card Layout Test</h2>
+            <div class="tarot-card-container">
+                <div class="tarot-card">
+                    <div style="width: 200px; height: 350px; background: #ddd; margin: 0 auto;"></div>
+                    <div class="tarot-card-name">The Fool</div>
+                    <div class="tarot-card-position">Past</div>
+                </div>
+                <div class="tarot-card">
+                    <div style="width: 200px; height: 350px; background: #ddd; margin: 0 auto;"></div>
+                    <div class="tarot-card-name">The Magician</div>
+                    <div class="tarot-card-position">Present</div>
+                </div>
+                <div class="tarot-card">
+                    <div style="width: 200px; height: 350px; background: #ddd; margin: 0 auto;"></div>
+                    <div class="tarot-card-name">The High Priestess</div>
+                    <div class="tarot-card-position">Future</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Test Fortune Display -->
+        <section class="section">
+            <h2>Fortune Display Test</h2>
+            <div class="fortune-container">
+                Your question weighs heavily upon the cards, dear seeker. The Fool in your past speaks of beginnings taken without full knowledge, a leap of faith that set your current path in motion. The Magician in your present position reveals that you now possess all the tools and skills needed to manifest your desires. The High Priestess in your future suggests that intuition and hidden knowledge will guide your next steps. Trust in the mysteries that unfold before you.
+            </div>
+        </section>
+
+        <!-- Test Status Messages -->
+        <section class="section">
+            <h2>Status Message Test</h2>
+            <div class="status-message error">
+                Error: Unable to load historical data. Please try again later.
+            </div>
+            <div class="status-message info">
+                Processing your numbers... Please wait.
+            </div>
+        </section>
+
+    </main>
+
+    <footer role="contentinfo">
+        <p>&copy; 2025 Lotto Graveyard. Using 1909 Rider-Waite tarot imagery (public domain).</p>
+        <p><a href="#privacy">Privacy Policy</a> | <a href="#about">About</a></p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,8 @@
+# AWS SDK for Python (Bedrock API for AI model access)
+boto3>=1.34.0
+
+# HTTP requests for external AI APIs (if using non-AWS AI services)
+requests>=2.31.0
+
+# No additional dependencies required for basic Lambda function structure
+# Task 10.2 will add specific AI service dependencies as needed

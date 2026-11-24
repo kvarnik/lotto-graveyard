@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analysis Module Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            color: #333;
+        }
+        
+        h2 {
+            color: #666;
+            border-bottom: 2px solid #ccc;
+            padding-bottom: 10px;
+        }
+        
+        .input-section {
+            margin-bottom: 20px;
+        }
+        
+        input {
+            padding: 8px;
+            margin: 5px;
+            width: 60px;
+            font-size: 16px;
+        }
+        
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        button:hover {
+            background-color: #45a049;
+        }
+        
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .results {
+            margin-top: 20px;
+        }
+        
+        .result-section {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-left: 4px solid #4CAF50;
+            margin-bottom: 15px;
+        }
+        
+        .error {
+            background-color: #ffebee;
+            border-left-color: #f44336;
+            color: #c62828;
+        }
+        
+        .success {
+            background-color: #e8f5e9;
+            border-left-color: #4CAF50;
+        }
+        
+        pre {
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        
+        .status {
+            padding: 5px 10px;
+            border-radius: 4px;
+            display: inline-block;
+            margin: 5px 0;
+        }
+        
+        .status.loaded {
+            background-color: #4CAF50;
+            color: white;
+        }
+        
+        .status.not-loaded {
+            background-color: #ff9800;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Historical Analysis Module Test</h1>
+        
+        <div class="input-section">
+            <h2>Test Configuration</h2>
+            <div id="dataStatus">
+                <span class="status not-loaded">Data Not Loaded</span>
+            </div>
+            <button id="loadDataBtn" onclick="loadData()">Load Historical Data</button>
+        </div>
+        
+        <div class="input-section">
+            <h2>Lottery Numbers Input</h2>
+            <div>
+                <label>White Balls (5 numbers from 1-69):</label><br>
+                <input type="number" id="white1" min="1" max="69" value="5">
+                <input type="number" id="white2" min="1" max="69" value="29">
+                <input type="number" id="white3" min="1" max="69" value="33">
+                <input type="number" id="white4" min="1" max="69" value="36">
+                <input type="number" id="white5" min="1" max="69" value="45">
+            </div>
+            <div style="margin-top: 10px;">
+                <label>Powerball (1 number from 1-26):</label><br>
+                <input type="number" id="powerball" min="1" max="26" value="22">
+            </div>
+            <button id="analyzeBtn" onclick="analyzeNumbers()" disabled>Analyze Numbers</button>
+        </div>
+        
+        <div class="results" id="results"></div>
+    </div>
+    
+    <script src="js/config.js"></script>
+    <script src="js/data-loader.js"></script>
+    <script src="js/analysis.js"></script>
+    
+    <script>
+        let analysisModule = null;
+        
+        async function loadData() {
+            const btn = document.getElementById('loadDataBtn');
+            const statusEl = document.getElementById('dataStatus');
+            const analyzeBtn = document.getElementById('analyzeBtn');
+            
+            try {
+                btn.disabled = true;
+                btn.textContent = 'Loading...';
+                statusEl.innerHTML = '<span class="status not-loaded">Loading...</span>';
+                
+                analysisModule = new HistoricalAnalysis();
+                await analysisModule.loadData();
+                
+                const status = analysisModule.getDataStatus();
+                statusEl.innerHTML = `
+                    <span class="status loaded">Data Loaded</span>
+                    <div>Drawings: ${status.drawingsCount}</div>
+                    <div>Last Updated: ${status.lastUpdated}</div>
+                `;
+                
+                btn.textContent = 'Reload Data';
+                analyzeBtn.disabled = false;
+                
+                showResult('Data loaded successfully!', 'success');
+                
+            } catch (error) {
+                statusEl.innerHTML = '<span class="status not-loaded">Load Failed</span>';
+                showResult(`Error loading data: ${error.message}`, 'error');
+                btn.textContent = 'Retry Load';
+            } finally {
+                btn.disabled = false;
+            }
+        }
+        
+        function analyzeNumbers() {
+            if (!analysisModule) {
+                showResult('Please load data first', 'error');
+                return;
+            }
+            
+            try {
+                // Get input values
+                const whiteBalls = [
+                    parseInt(document.getElementById('white1').value),
+                    parseInt(document.getElementById('white2').value),
+                    parseInt(document.getElementById('white3').value),
+                    parseInt(document.getElementById('white4').value),
+                    parseInt(document.getElementById('white5').value)
+                ];
+                const powerball = parseInt(document.getElementById('powerball').value);
+                
+                // Validate input
+                if (whiteBalls.some(isNaN) || isNaN(powerball)) {
+                    showResult('Please enter valid numbers', 'error');
+                    return;
+                }
+                
+                // Perform analysis
+                const result = analysisModule.analyze({ whiteBalls, powerball });
+                
+                // Display results
+                displayAnalysisResult(result);
+                
+            } catch (error) {
+                showResult(`Error analyzing numbers: ${error.message}`, 'error');
+            }
+        }
+        
+        function displayAnalysisResult(result) {
+            const resultsDiv = document.getElementById('results');
+            
+            let html = '<h2>Analysis Results</h2>';
+            
+            // Numbers analyzed
+            html += '<div class="result-section">';
+            html += '<h3>Numbers Analyzed</h3>';
+            html += `<p>White Balls: ${result.numbers.whiteBalls.join(', ')}</p>`;
+            html += `<p>Powerball: ${result.numbers.powerball}</p>`;
+            html += '</div>';
+            
+            // Exact match
+            html += '<div class="result-section ' + (result.exactMatch ? 'success' : '') + '">';
+            html += '<h3>Exact Match</h3>';
+            if (result.exactMatch) {
+                html += `<p><strong>🎉 WINNER! These numbers won on ${result.exactMatch.drawDate}!</strong></p>`;
+                html += `<p>Winning Numbers: ${result.exactMatch.whiteBalls.join(', ')} + PB ${result.exactMatch.powerball}</p>`;
+                if (result.exactMatch.jackpot) {
+                    html += `<p>Jackpot: $${result.exactMatch.jackpot.toLocaleString()}</p>`;
+                }
+            } else {
+                html += '<p>These numbers never won the jackpot.</p>';
+            }
+            html += '</div>';
+            
+            // Closest match
+            html += '<div class="result-section">';
+            html += '<h3>Closest Match</h3>';
+            if (result.closestMatch.drawing) {
+                html += `<p>Date: ${result.closestMatch.drawing.drawDate}</p>`;
+                html += `<p>White Ball Matches: ${result.closestMatch.whiteMatches} out of 5</p>`;
+                html += `<p>Powerball Match: ${result.closestMatch.powerballMatch ? 'Yes ✓' : 'No ✗'}</p>`;
+                html += `<p>Drawing Numbers: ${result.closestMatch.drawing.whiteBalls.join(', ')} + PB ${result.closestMatch.drawing.powerball}</p>`;
+                
+                const totalMatches = result.closestMatch.whiteMatches + (result.closestMatch.powerballMatch ? 1 : 0);
+                html += `<p><strong>Total Matches: ${totalMatches} out of 6</strong></p>`;
+            } else {
+                html += '<p>No match data available</p>';
+            }
+            html += '</div>';
+            
+            // Date range
+            html += '<div class="result-section">';
+            html += '<h3>Date Range Analyzed</h3>';
+            html += `<p>Earliest: ${result.dateRange.earliest}</p>`;
+            html += `<p>Latest: ${result.dateRange.latest}</p>`;
+            html += `<p>Total Drawings: ${result.totalDrawings}</p>`;
+            html += '</div>';
+            
+            // Frequency (past year)
+            html += '<div class="result-section">';
+            html += '<h3>Frequency in Past Year</h3>';
+            html += '<p><strong>White Balls:</strong></p>';
+            html += '<ul>';
+            result.numbers.whiteBalls.forEach(ball => {
+                const count = result.frequency.whiteBalls[ball];
+                html += `<li>Ball ${ball}: appeared ${count} time${count !== 1 ? 's' : ''}</li>`;
+            });
+            html += '</ul>';
+            html += `<p><strong>Powerball ${result.numbers.powerball}:</strong> appeared ${result.frequency.powerball} time${result.frequency.powerball !== 1 ? 's' : ''}</p>`;
+            html += '</div>';
+            
+            // Raw JSON (for debugging)
+            html += '<div class="result-section">';
+            html += '<h3>Raw JSON (for debugging)</h3>';
+            html += '<pre>' + JSON.stringify(result, null, 2) + '</pre>';
+            html += '</div>';
+            
+            resultsDiv.innerHTML = html;
+        }
+        
+        function showResult(message, type) {
+            const resultsDiv = document.getElementById('results');
+            const className = type === 'error' ? 'error' : 'success';
+            resultsDiv.innerHTML = `<div class="result-section ${className}">${message}</div>`;
+        }
+        
+        // Auto-load data on page load
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                loadData();
+            }, 100);
+        });
+    </script>
+</body>
+</html>

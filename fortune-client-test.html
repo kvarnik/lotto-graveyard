@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fortune Client Test</title>
+    <style>
+        body {
+            font-family: Georgia, serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        button {
+            background: #333;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+        }
+        button:hover {
+            background: #555;
+        }
+        .error-message {
+            color: #d32f2f;
+            margin: 10px 0;
+        }
+        .fortune-text {
+            line-height: 1.6;
+            color: #333;
+        }
+        .retry-message {
+            color: #ff9800;
+            font-style: italic;
+        }
+        #fortune-container {
+            margin-top: 20px;
+            padding: 15px;
+            background: #fafafa;
+            border-radius: 4px;
+        }
+        pre {
+            background: #f0f0f0;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Fortune Client Test Page</h1>
+    
+    <div class="test-section">
+        <h2>Test Configuration</h2>
+        <p><strong>Lambda URL:</strong> <span id="lambda-url"></span></p>
+        <p><strong>Timeout:</strong> 30 seconds</p>
+        <p><strong>Max Retries:</strong> 3</p>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test Request</h2>
+        <label for="test-question">Question:</label><br>
+        <textarea id="test-question" rows="3" style="width: 100%; margin: 10px 0; padding: 10px;">
+What does my future hold?
+        </textarea>
+        
+        <h3>Sample Cards:</h3>
+        <pre>
+[
+  { name: "The Fool", position: "past" },
+  { name: "The Magician", position: "present" },
+  { name: "The World", position: "future" }
+]
+        </pre>
+        
+        <button id="test-btn" onclick="testFortuneGeneration()">Generate Fortune</button>
+        <button onclick="clearResults()">Clear Results</button>
+    </div>
+    
+    <div class="test-section">
+        <h2>Response</h2>
+        <div id="fortune-container"></div>
+    </div>
+    
+    <div class="test-section hidden" id="fortune-section"></div>
+
+    <!-- Load dependencies -->
+    <script src="js/config.js"></script>
+    <script src="js/fortune-client.js"></script>
+    
+    <script>
+        // Display Lambda URL
+        document.getElementById('lambda-url').textContent = CONFIG.FORTUNE_LAMBDA_URL;
+        
+        // Sample test cards
+        const testCards = [
+            { name: "The Fool", position: "past" },
+            { name: "The Magician", position: "present" },
+            { name: "The World", position: "future" }
+        ];
+        
+        async function testFortuneGeneration() {
+            const question = document.getElementById('test-question').value;
+            const fortuneContainer = document.getElementById('fortune-container');
+            const testBtn = document.getElementById('test-btn');
+            
+            // Clear previous results
+            fortuneContainer.innerHTML = '<p>Generating fortune...</p>';
+            testBtn.disabled = true;
+            
+            try {
+                // Create FortuneClient
+                const fortuneClient = new FortuneClient();
+                
+                // Generate fortune
+                const fortune = await fortuneClient.generateFortune(question, testCards);
+                
+                // Display success
+                fortuneClient.displayFortune(fortune);
+                
+                console.log('Fortune generated successfully:', fortune);
+                
+            } catch (error) {
+                // Display error
+                const fortuneClient = new FortuneClient();
+                fortuneClient.displayError(error.message, testFortuneGeneration);
+                
+                console.error('Fortune generation failed:', error);
+            } finally {
+                testBtn.disabled = false;
+            }
+        }
+        
+        function clearResults() {
+            document.getElementById('fortune-container').innerHTML = '';
+        }
+        
+        // Test on page load with info message
+        window.addEventListener('DOMContentLoaded', () => {
+            const fortuneContainer = document.getElementById('fortune-container');
+            fortuneContainer.innerHTML = `
+                <p><strong>Ready to test!</strong></p>
+                <p>Click "Generate Fortune" to test the Lambda Fortune Generator.</p>
+                <p><em>Note: This test will only work if the Lambda function URL is properly configured in config.js</em></p>
+            `;
+        });
+    </script>
+</body>
+</html>

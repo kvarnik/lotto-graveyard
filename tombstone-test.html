@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tombstone Renderer Test</title>
+    <link rel="stylesheet" href="css/main.css">
+    <style>
+        body {
+            padding: 20px;
+        }
+        .test-controls {
+            max-width: 600px;
+            margin: 0 auto 40px;
+            padding: 20px;
+            background: white;
+            border: 2px solid #333;
+            border-radius: 4px;
+        }
+        .test-controls h2 {
+            margin-bottom: 15px;
+        }
+        .test-controls button {
+            margin: 5px;
+        }
+        .info {
+            margin-top: 20px;
+            padding: 10px;
+            background: #f0f0f0;
+            border-left: 4px solid #333;
+        }
+    </style>
+</head>
+<body>
+    <header role="banner">
+        <h1>Tombstone Renderer Test</h1>
+        <p class="tagline">Testing responsive layout and styling</p>
+    </header>
+
+    <main role="main">
+        <div class="test-controls">
+            <h2>Test Controls</h2>
+            <p>Click a button to render different test cases:</p>
+            <button id="test-never-won">Never Won (Common Case)</button>
+            <button id="test-won">Exact Match (Rare Case)</button>
+            <button id="test-close-match">Very Close Match</button>
+            <button id="test-no-match">No Matches at All</button>
+            
+            <div class="info">
+                <strong>Testing Requirements:</strong>
+                <ul>
+                    <li>Numbers display at minimum 24pt font</li>
+                    <li>Text display at minimum 14pt font</li>
+                    <li>Desktop (≥768px): Vertical layout, 400px min width</li>
+                    <li>Mobile (<768px): Single-column, viewport width - 32px</li>
+                    <li>Rider-Waite styling with decorative borders</li>
+                    <li>Grayscale palette</li>
+                </ul>
+            </div>
+        </div>
+
+        <section id="tombstone-section" class="section">
+            <h2>Tombstone Display</h2>
+            <div id="tombstone-container" role="article" aria-label="Historical analysis results">
+                <!-- Tombstone will be rendered here -->
+            </div>
+        </section>
+    </main>
+
+    <footer role="contentinfo">
+        <p>Tombstone Renderer Test Page</p>
+    </footer>
+
+    <script src="js/tombstone.js"></script>
+    <script>
+        // Test data
+        const testCases = {
+            neverWon: {
+                numbers: {
+                    whiteBalls: [7, 14, 21, 35, 42],
+                    powerball: 13
+                },
+                exactMatch: null,
+                closestMatch: {
+                    drawing: {
+                        drawDate: '2024-11-20',
+                        whiteBalls: [7, 14, 28, 36, 50],
+                        powerball: 8
+                    },
+                    whiteMatches: 2,
+                    powerballMatch: false
+                },
+                dateRange: {
+                    earliest: '2020-01-01',
+                    latest: '2024-12-31'
+                },
+                frequency: {
+                    whiteBalls: {
+                        7: 18,
+                        14: 12,
+                        21: 15,
+                        35: 9,
+                        42: 7
+                    },
+                    powerball: 11
+                },
+                totalDrawings: 520
+            },
+            
+            won: {
+                numbers: {
+                    whiteBalls: [3, 11, 19, 27, 55],
+                    powerball: 6
+                },
+                exactMatch: {
+                    drawDate: '2023-06-15',
+                    whiteBalls: [3, 11, 19, 27, 55],
+                    powerball: 6,
+                    jackpot: 450000000
+                },
+                closestMatch: {
+                    drawing: {
+                        drawDate: '2023-06-15',
+                        whiteBalls: [3, 11, 19, 27, 55],
+                        powerball: 6
+                    },
+                    whiteMatches: 5,
+                    powerballMatch: true
+                },
+                dateRange: {
+                    earliest: '2020-01-01',
+                    latest: '2024-12-31'
+                },
+                frequency: {
+                    whiteBalls: {
+                        3: 20,
+                        11: 16,
+                        19: 14,
+                        27: 10,
+                        55: 5
+                    },
+                    powerball: 13
+                },
+                totalDrawings: 520
+            },
+            
+            closeMatch: {
+                numbers: {
+                    whiteBalls: [5, 12, 23, 34, 45],
+                    powerball: 10
+                },
+                exactMatch: null,
+                closestMatch: {
+                    drawing: {
+                        drawDate: '2024-09-10',
+                        whiteBalls: [5, 12, 23, 34, 50],
+                        powerball: 10
+                    },
+                    whiteMatches: 4,
+                    powerballMatch: true
+                },
+                dateRange: {
+                    earliest: '2020-01-01',
+                    latest: '2024-12-31'
+                },
+                frequency: {
+                    whiteBalls: {
+                        5: 22,
+                        12: 19,
+                        23: 17,
+                        34: 14,
+                        45: 11
+                    },
+                    powerball: 16
+                },
+                totalDrawings: 520
+            },
+            
+            noMatch: {
+                numbers: {
+                    whiteBalls: [1, 2, 3, 4, 5],
+                    powerball: 1
+                },
+                exactMatch: null,
+                closestMatch: {
+                    drawing: {
+                        drawDate: '2024-03-05',
+                        whiteBalls: [1, 10, 20, 30, 40],
+                        powerball: 15
+                    },
+                    whiteMatches: 1,
+                    powerballMatch: false
+                },
+                dateRange: {
+                    earliest: '2020-01-01',
+                    latest: '2024-12-31'
+                },
+                frequency: {
+                    whiteBalls: {
+                        1: 25,
+                        2: 22,
+                        3: 20,
+                        4: 18,
+                        5: 15
+                    },
+                    powerball: 12
+                },
+                totalDrawings: 520
+            }
+        };
+        
+        // Initialize renderer
+        const renderer = new TombstoneRenderer();
+        const container = document.getElementById('tombstone-container');
+        
+        // Set up button handlers
+        document.getElementById('test-never-won').addEventListener('click', () => {
+            renderer.render(testCases.neverWon, container);
+            document.getElementById('tombstone-section').classList.remove('hidden');
+        });
+        
+        document.getElementById('test-won').addEventListener('click', () => {
+            renderer.render(testCases.won, container);
+            document.getElementById('tombstone-section').classList.remove('hidden');
+        });
+        
+        document.getElementById('test-close-match').addEventListener('click', () => {
+            renderer.render(testCases.closeMatch, container);
+            document.getElementById('tombstone-section').classList.remove('hidden');
+        });
+        
+        document.getElementById('test-no-match').addEventListener('click', () => {
+            renderer.render(testCases.noMatch, container);
+            document.getElementById('tombstone-section').classList.remove('hidden');
+        });
+        
+        // Render default test case on load
+        renderer.render(testCases.neverWon, container);
+        document.getElementById('tombstone-section').classList.remove('hidden');
+        
+        console.log('Tombstone test page loaded. Try resizing your browser window to test responsive layout.');
+    </script>
+</body>
+</html>

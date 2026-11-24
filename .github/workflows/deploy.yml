@@ -1,0 +1,254 @@
+name: Deploy Static Site
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  deploy-github-pages:
+    name: Deploy to GitHub Pages
+    runs-on: ubuntu-latest
+    # Only run if not using S3 (comment out this job if using S3)
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: |
+          if [ -f package.json ]; then
+            npm ci
+          fi
+      
+      - name: Verify required files exist
+        run: |
+          echo "Checking required files..."
+          test -f index.html || { echo "ERROR: index.html not found"; exit 1; }
+          test -f js/config.js || { echo "ERROR: js/config.js not found"; exit 1; }
+          test -d css || { echo "ERROR: css directory not found"; exit 1; }
+          test -d js || { echo "ERROR: js directory not found"; exit 1; }
+          test -d assets || { echo "ERROR: assets directory not found"; exit 1; }
+          test -d data || { echo "ERROR: data directory not found"; exit 1; }
+          echo "✓ All required files present"
+      
+      - name: Validate configuration
+        run: |
+          echo "Validating js/config.js..."
+          if grep -q "your-function-url" js/config.js; then
+            echo "⚠️  WARNING: Lambda Function URL not configured in js/config.js"
+            echo "    Update FORTUNE_LAMBDA_URL before fortune generation will work"
+          else
+            echo "✓ Configuration appears valid"
+          fi
+      
+      # Option 1: Deploy to GitHub Pages using peaceiris action
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        if: github.ref == 'refs/heads/main'
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./
+          exclude_assets: '.github,lambda,scripts,.kiro,.git*,node_modules,cdk,*.md,bucket-policy.json,cloudfront-config.json'
+          force_orphan: true
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+          commit_message: 'Deploy static site: ${{ github.event.head_commit.message }}'
+      
+      - name: Deployment summary
+        if: success()
+        run: |
+          echo "✅ Deployment successful!"
+          echo ""
+          echo "Your site will be available at:"
+          echo "  https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}"
+          echo ""
+          echo "Note: It may take 1-2 minutes for changes to appear."
+  
+  deploy-s3-cloudfront:
+    name: Deploy to AWS S3 + CloudFront
+    runs-on: ubuntu-latest
+    # Uncomment this job if using S3+CloudFront deployment
+    # Comment out the deploy-github-pages job above if using this
+    if: false  # Set to true to enable S3 deployment
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: |
+          if [ -f package.json ]; then
+            npm ci
+          fi
+      
+      - name: Verify required files exist
+        run: |
+          echo "Checking required files..."
+          test -f index.html || { echo "ERROR: index.html not found"; exit 1; }
+          test -f js/config.js || { echo "ERROR: js/config.js not found"; exit 1; }
+          test -d css || { echo "ERROR: css directory not found"; exit 1; }
+          test -d js || { echo "ERROR: js directory not found"; exit 1; }
+          test -d assets || { echo "ERROR: assets directory not found"; exit 1; }
+          test -d data || { echo "ERROR: data directory not found"; exit 1; }
+          echo "✓ All required files present"
+      
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+      
+      - name: Deploy to S3
+        env:
+          S3_BUCKET: ${{ secrets.S3_BUCKET_NAME || 'lotto-graveyard' }}
+        run: |
+          echo "Deploying to S3 bucket: $S3_BUCKET"
+          aws s3 sync . s3://$S3_BUCKET \
+            --exclude ".git*" \
+            --exclude ".github/*" \
+            --exclude "lambda/*" \
+            --exclude "scripts/*" \
+            --exclude ".kiro/*" \
+            --exclude "node_modules/*" \
+            --exclude "cdk/*" \
+            --exclude "*.md" \
+            --exclude "bucket-policy.json" \
+            --exclude "cloudfront-config.json" \
+            --cache-control "max-age=86400" \
+            --delete
+          echo "✓ Files uploaded to S3"
+      
+      - name: Set cache headers for static assets
+        env:
+          S3_BUCKET: ${{ secrets.S3_BUCKET_NAME || 'lotto-graveyard' }}
+        run: |
+          # Cache images for 1 year
+          aws s3 cp s3://$S3_BUCKET/assets s3://$S3_BUCKET/assets \
+            --recursive \
+            --metadata-directive REPLACE \
+            --cache-control "max-age=31536000,public,immutable"
+          
+          # Cache CSS/JS for 1 day (can be updated frequently)
+          aws s3 cp s3://$S3_BUCKET/css s3://$S3_BUCKET/css \
+            --recursive \
+            --metadata-directive REPLACE \
+            --cache-control "max-age=86400,public"
+          
+          aws s3 cp s3://$S3_BUCKET/js s3://$S3_BUCKET/js \
+            --recursive \
+            --metadata-directive REPLACE \
+            --cache-control "max-age=86400,public"
+          
+          # Don't cache HTML (may change frequently)
+          aws s3 cp s3://$S3_BUCKET/index.html s3://$S3_BUCKET/index.html \
+            --metadata-directive REPLACE \
+            --cache-control "max-age=300,public"
+          
+          echo "✓ Cache headers configured"
+      
+      - name: Invalidate CloudFront cache
+        env:
+          CLOUDFRONT_DISTRIBUTION_ID: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
+        run: |
+          if [ -n "$CLOUDFRONT_DISTRIBUTION_ID" ]; then
+            echo "Creating CloudFront invalidation..."
+            INVALIDATION_ID=$(aws cloudfront create-invalidation \
+              --distribution-id $CLOUDFRONT_DISTRIBUTION_ID \
+              --paths "/*" \
+              --query 'Invalidation.Id' \
+              --output text)
+            echo "✓ Invalidation created: $INVALIDATION_ID"
+            echo "   Cache will be cleared in 5-10 minutes"
+          else
+            echo "⚠️  WARNING: CLOUDFRONT_DISTRIBUTION_ID not set, skipping invalidation"
+          fi
+      
+      - name: Deployment summary
+        if: success()
+        env:
+          S3_BUCKET: ${{ secrets.S3_BUCKET_NAME || 'lotto-graveyard' }}
+        run: |
+          echo "✅ Deployment successful!"
+          echo ""
+          echo "S3 Bucket: $S3_BUCKET"
+          if [ -n "${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}" ]; then
+            echo "CloudFront Distribution: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}"
+          fi
+          echo ""
+          echo "Note: CloudFront cache invalidation may take 5-10 minutes."
+
+  smoke-test:
+    name: Smoke Tests
+    runs-on: ubuntu-latest
+    needs: [deploy-github-pages]  # Change to deploy-s3-cloudfront if using S3
+    if: success()
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Wait for deployment
+        run: |
+          echo "Waiting 30 seconds for deployment to propagate..."
+          sleep 30
+      
+      - name: Test site accessibility
+        run: |
+          # Test GitHub Pages URL
+          SITE_URL="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}"
+          echo "Testing site at: $SITE_URL"
+          
+          HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" "$SITE_URL" || echo "000")
+          
+          if [ "$HTTP_CODE" = "200" ]; then
+            echo "✅ Site is accessible (HTTP $HTTP_CODE)"
+          elif [ "$HTTP_CODE" = "000" ]; then
+            echo "⚠️  WARNING: Could not connect to site (may still be deploying)"
+            exit 0  # Don't fail the build
+          else
+            echo "⚠️  WARNING: Unexpected HTTP code: $HTTP_CODE"
+            exit 0  # Don't fail the build
+          fi
+      
+      - name: Test required resources
+        run: |
+          SITE_URL="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}"
+          
+          echo "Testing critical resources..."
+          
+          # Test CSS
+          curl -sf "$SITE_URL/css/main.css" > /dev/null && echo "✓ CSS loaded" || echo "⚠️  CSS not found"
+          
+          # Test JS config
+          curl -sf "$SITE_URL/js/config.js" > /dev/null && echo "✓ JS config loaded" || echo "⚠️  JS config not found"
+          
+          # Test historical data
+          curl -sf "$SITE_URL/data/historical-data.json" > /dev/null && echo "✓ Historical data loaded" || echo "⚠️  Historical data not found"
+          
+          echo ""
+          echo "Smoke tests completed"

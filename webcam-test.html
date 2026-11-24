@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webcam Scanner Test</title>
+    <link rel="stylesheet" href="css/main.css">
+    <style>
+        body {
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .test-container {
+            background-color: var(--color-white);
+            padding: var(--spacing-lg);
+            border: 2px solid var(--color-black);
+            border-radius: var(--border-radius);
+        }
+        .test-results {
+            margin-top: var(--spacing-md);
+            padding: var(--spacing-md);
+            background-color: rgba(0, 0, 0, 0.05);
+            border-radius: var(--border-radius);
+        }
+    </style>
+</head>
+<body>
+    <h1>Webcam Scanner Test</h1>
+    <p>This page tests the webcam scanner functionality.</p>
+    
+    <div class="test-container">
+        <h2>Webcam Scanner</h2>
+        
+        <div class="webcam-scanner">
+            <div class="video-container">
+                <video 
+                    id="webcam-video" 
+                    autoplay 
+                    playsinline
+                    aria-label="Live camera feed for ticket scanning"
+                ></video>
+                <canvas 
+                    id="webcam-canvas" 
+                    style="display: none;"
+                    aria-hidden="true"
+                ></canvas>
+            </div>
+            
+            <div class="scanner-controls">
+                <button type="button" id="start-camera-btn" class="btn-primary">
+                    Start Camera
+                </button>
+                <button type="button" id="stop-camera-btn" class="btn-secondary hidden">
+                    Stop Camera
+                </button>
+                <button type="button" id="switch-camera-btn" class="btn-secondary hidden">
+                    Switch Camera
+                </button>
+            </div>
+            
+            <div id="scanner-status" class="scanner-status" role="status" aria-live="polite"></div>
+            <div id="scanner-error" class="error-message text-center" role="alert" aria-live="assertive"></div>
+        </div>
+        
+        <div class="test-results">
+            <h3>Test Results</h3>
+            <p id="camera-state">Camera State: Not started</p>
+            <p id="facing-mode">Facing Mode: N/A</p>
+            <p id="available-cameras">Available Cameras: N/A</p>
+            <button type="button" id="capture-frame-btn" class="btn-secondary">
+                Capture Frame
+            </button>
+            <div id="captured-frame" style="margin-top: 10px;"></div>
+        </div>
+    </div>
+    
+    <script src="js/webcam-scanner.js"></script>
+    <script>
+        // Initialize scanner
+        const videoElement = document.getElementById('webcam-video');
+        const canvasElement = document.getElementById('webcam-canvas');
+        const scanner = new WebcamScanner();
+        scanner.init(videoElement, canvasElement);
+        
+        // Update state display
+        function updateStateDisplay() {
+            const state = scanner.getState();
+            document.getElementById('camera-state').textContent = 
+                `Camera State: ${state.isScanning ? 'Running' : 'Stopped'}`;
+            document.getElementById('facing-mode').textContent = 
+                `Facing Mode: ${state.facingMode}`;
+        }
+        
+        // Check available cameras
+        async function checkCameras() {
+            const cameras = await scanner.getAvailableCameras();
+            document.getElementById('available-cameras').textContent = 
+                `Available Cameras: ${cameras.length} (${cameras.map(c => c.label || 'Unnamed').join(', ')})`;
+        }
+        
+        // Start camera button
+        document.getElementById('start-camera-btn').addEventListener('click', async () => {
+            const statusEl = document.getElementById('scanner-status');
+            const errorEl = document.getElementById('scanner-error');
+            const startBtn = document.getElementById('start-camera-btn');
+            const stopBtn = document.getElementById('stop-camera-btn');
+            const switchBtn = document.getElementById('switch-camera-btn');
+            
+            errorEl.textContent = '';
+            statusEl.textContent = 'Starting camera...';
+            
+            try {
+                await scanner.startCamera();
+                statusEl.textContent = 'Camera started successfully!';
+                startBtn.classList.add('hidden');
+                stopBtn.classList.remove('hidden');
+                
+                // Check if multiple cameras available
+                const hasMultiple = await scanner.hasMultipleCameras();
+                if (hasMultiple) {
+                    switchBtn.classList.remove('hidden');
+                }
+                
+                updateStateDisplay();
+                await checkCameras();
+            } catch (error) {
+                statusEl.textContent = '';
+                errorEl.textContent = `Error: ${error.message}`;
+                console.error('Camera error:', error);
+            }
+        });
+        
+        // Stop camera button
+        document.getElementById('stop-camera-btn').addEventListener('click', () => {
+            scanner.stopCamera();
+            const statusEl = document.getElementById('scanner-status');
+            const startBtn = document.getElementById('start-camera-btn');
+            const stopBtn = document.getElementById('stop-camera-btn');
+            const switchBtn = document.getElementById('switch-camera-btn');
+            
+            statusEl.textContent = 'Camera stopped.';
+            startBtn.classList.remove('hidden');
+            stopBtn.classList.add('hidden');
+            switchBtn.classList.add('hidden');
+            
+            updateStateDisplay();
+        });
+        
+        // Switch camera button
+        document.getElementById('switch-camera-btn').addEventListener('click', async () => {
+            const statusEl = document.getElementById('scanner-status');
+            statusEl.textContent = 'Switching camera...';
+            
+            try {
+                await scanner.switchCamera();
+                statusEl.textContent = 'Camera switched!';
+                updateStateDisplay();
+            } catch (error) {
+                statusEl.textContent = 'Failed to switch camera.';
+                console.error('Switch error:', error);
+            }
+        });
+        
+        // Capture frame button
+        document.getElementById('capture-frame-btn').addEventListener('click', () => {
+            const imageData = scanner.captureFrame();
+            const captureDiv = document.getElementById('captured-frame');
+            
+            if (imageData) {
+                // Create a temporary canvas to display the captured frame
+                const tempCanvas = document.createElement('canvas');
+                tempCanvas.width = imageData.width;
+                tempCanvas.height = imageData.height;
+                tempCanvas.style.maxWidth = '100%';
+                tempCanvas.style.border = '1px solid black';
+                
+                const ctx = tempCanvas.getContext('2d');
+                ctx.putImageData(imageData, 0, 0);
+                
+                captureDiv.innerHTML = '<p><strong>Captured Frame:</strong></p>';
+                captureDiv.appendChild(tempCanvas);
+            } else {
+                captureDiv.innerHTML = '<p style="color: red;">No frame captured. Camera may not be running.</p>';
+            }
+        });
+        
+        // Initial state
+        checkCameras();
+        updateStateDisplay();
+    </script>
+</body>
+</html>

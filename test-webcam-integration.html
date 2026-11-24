@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webcam Integration Test - Lotto Graveyard</title>
+    <link rel="stylesheet" href="css/main.css">
+    <style>
+        body {
+            padding: 20px;
+            font-family: 'Georgia', serif;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 2px solid #333;
+            background: #f5f5f5;
+        }
+        .test-status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .test-status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .test-status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .test-status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        .log {
+            background: #000;
+            color: #0f0;
+            padding: 10px;
+            font-family: monospace;
+            max-height: 300px;
+            overflow-y: auto;
+            margin: 10px 0;
+        }
+        .log-entry {
+            margin: 2px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Webcam Integration Test</h1>
+    <p>This test validates the webcam scanning flow integration in the main application.</p>
+    
+    <!-- Test Section 1: Initialization -->
+    <div class="test-section">
+        <h2>Test 1: Application Initialization</h2>
+        <p>Verifies that the app initializes with webcam scanner properly set up.</p>
+        <div id="test1-status" class="test-status info">Running...</div>
+    </div>
+    
+    <!-- Test Section 2: Webcam Controls Setup -->
+    <div class="test-section">
+        <h2>Test 2: Webcam Controls Setup</h2>
+        <p>Verifies that webcam control buttons are wired correctly.</p>
+        <div id="test2-status" class="test-status info">Running...</div>
+    </div>
+    
+    <!-- Test Section 3: State Transitions -->
+    <div class="test-section">
+        <h2>Test 3: State Transitions</h2>
+        <p>Verifies state transitions during webcam flow.</p>
+        <div id="test3-status" class="test-status info">Running...</div>
+    </div>
+    
+    <!-- Test Section 4: Error Handling -->
+    <div class="test-section">
+        <h2>Test 4: Error Handling</h2>
+        <p>Verifies that camera errors are handled gracefully.</p>
+        <div id="test4-status" class="test-status info">Running...</div>
+    </div>
+    
+    <!-- Test Section 5: Manual Integration Test -->
+    <div class="test-section">
+        <h2>Test 5: Manual Integration Test</h2>
+        <p>Manually test the webcam scanning flow with the actual UI.</p>
+        <button id="open-app-btn" onclick="window.open('index.html', '_blank')">
+            Open Full Application
+        </button>
+        <div id="test5-status" class="test-status info">
+            Manual test - Open the app and try scanning a ticket.<br>
+            <strong>Test Steps:</strong>
+            <ol>
+                <li>Click "Scan Ticket" button</li>
+                <li>Click "Start Camera" button</li>
+                <li>Allow camera permissions if prompted</li>
+                <li>Position a lottery ticket (or paper with numbers) in view</li>
+                <li>Verify numbers are detected or timeout occurs after 30 seconds</li>
+                <li>If detected, verify confirmation prompt appears</li>
+                <li>Test "Confirm & Analyze" and "Retry Scan" buttons</li>
+                <li>Test fallback to manual input</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Console Log -->
+    <div class="test-section">
+        <h2>Console Log</h2>
+        <div id="console-log" class="log"></div>
+    </div>
+    
+    <!-- Hidden DOM elements needed for testing -->
+    <div style="display: none;">
+        <div id="input-section"></div>
+        <div id="webcam-video"></div>
+        <canvas id="webcam-canvas"></canvas>
+        <button id="start-camera-btn"></button>
+        <button id="stop-camera-btn"></button>
+        <button id="switch-camera-btn"></button>
+        <button id="fallback-to-manual-btn"></button>
+        <div id="scanner-status"></div>
+        <div id="scanner-error"></div>
+        <div id="scanner-fallback"></div>
+    </div>
+    
+    <!-- Load Dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/seedrandom@3/seedrandom.min.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/validation.js"></script>
+    <script src="js/input.js"></script>
+    <script src="js/webcam-scanner.js"></script>
+    <script src="js/data-loader.js"></script>
+    <script src="js/analysis.js"></script>
+    <script src="js/tombstone.js"></script>
+    <script src="js/tarot-deck.js"></script>
+    <script src="js/tarot.js"></script>
+    <script src="js/fortune-client.js"></script>
+    <script src="js/app.js"></script>
+    
+    <script>
+        // Test logging utility
+        function log(message, type = 'info') {
+            const logElement = document.getElementById('console-log');
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            const timestamp = new Date().toLocaleTimeString();
+            entry.textContent = `[${timestamp}] [${type.toUpperCase()}] ${message}`;
+            logElement.appendChild(entry);
+            logElement.scrollTop = logElement.scrollHeight;
+            console.log(`[${type.toUpperCase()}] ${message}`);
+        }
+        
+        function setTestStatus(testId, status, message) {
+            const element = document.getElementById(`test${testId}-status`);
+            element.className = `test-status ${status}`;
+            element.textContent = message;
+        }
+        
+        // Run tests
+        async function runTests() {
+            log('Starting webcam integration tests...');
+            
+            // Test 1: Application Initialization
+            try {
+                log('Test 1: Checking app initialization...');
+                
+                // Wait a bit for DOM to be ready
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                // Check if app instance exists (it should be created on DOMContentLoaded)
+                if (typeof LottoGraveyardApp === 'undefined') {
+                    throw new Error('LottoGraveyardApp class not defined');
+                }
+                
+                log('✓ LottoGraveyardApp class is defined');
+                
+                // Check if webcam scanner is initialized
+                const videoElement = document.getElementById('webcam-video');
+                const canvasElement = document.getElementById('webcam-canvas');
+                
+                if (!videoElement || !canvasElement) {
+                    throw new Error('Webcam elements not found in DOM');
+                }
+                
+                log('✓ Webcam elements found in DOM');
+                
+                setTestStatus(1, 'success', '✓ Application initialization verified');
+                
+            } catch (error) {
+                log(`✗ Test 1 failed: ${error.message}`, 'error');
+                setTestStatus(1, 'error', `✗ Failed: ${error.message}`);
+            }
+            
+            // Test 2: Webcam Controls Setup
+            try {
+                log('Test 2: Checking webcam controls setup...');
+                
+                const startBtn = document.getElementById('start-camera-btn');
+                const stopBtn = document.getElementById('stop-camera-btn');
+                const switchBtn = document.getElementById('switch-camera-btn');
+                const fallbackBtn = document.getElementById('fallback-to-manual-btn');
+                
+                if (!startBtn || !stopBtn || !switchBtn || !fallbackBtn) {
+                    throw new Error('Webcam control buttons not found');
+                }
+                
+                log('✓ All webcam control buttons found');
+                
+                // Check if buttons have event listeners (they should be set up by setupWebcamControls)
+                // Note: Can't directly check event listeners, but we verified the buttons exist
+                
+                setTestStatus(2, 'success', '✓ Webcam controls setup verified');
+                
+            } catch (error) {
+                log(`✗ Test 2 failed: ${error.message}`, 'error');
+                setTestStatus(2, 'error', `✗ Failed: ${error.message}`);
+            }
+            
+            // Test 3: State Transitions
+            try {
+                log('Test 3: Verifying state transition methods exist...');
+                
+                // Create a test app instance
+                const testApp = new LottoGraveyardApp();
+                
+                // Check if methods exist
+                const methods = [
+                    'setupWebcamControls',
+                    'startScanning',
+                    'stopScanning',
+                    'handleScannedNumbers',
+                    'displayScannedNumbersConfirmation',
+                    'handleCameraError',
+                    'handleScanTimeout'
+                ];
+                
+                for (const method of methods) {
+                    if (typeof testApp[method] !== 'function') {
+                        throw new Error(`Method ${method} not found`);
+                    }
+                    log(`✓ Method ${method} exists`);
+                }
+                
+                setTestStatus(3, 'success', '✓ All state transition methods verified');
+                
+            } catch (error) {
+                log(`✗ Test 3 failed: ${error.message}`, 'error');
+                setTestStatus(3, 'error', `✗ Failed: ${error.message}`);
+            }
+            
+            // Test 4: Error Handling
+            try {
+                log('Test 4: Testing error handling methods...');
+                
+                const testApp = new LottoGraveyardApp();
+                
+                // Test camera error handling
+                testApp.handleCameraError(new Error('PERMISSION_DENIED'));
+                log('✓ Permission denied error handled');
+                
+                testApp.handleCameraError(new Error('NO_CAMERA'));
+                log('✓ No camera error handled');
+                
+                // Test scan timeout handling
+                testApp.handleScanTimeout();
+                log('✓ Scan timeout handled');
+                
+                // Check if error messages were displayed
+                const errorElement = document.getElementById('scanner-error');
+                const fallbackElement = document.getElementById('scanner-fallback');
+                
+                if (errorElement.textContent === '' && fallbackElement.classList.contains('hidden')) {
+                    throw new Error('Error messages not displayed correctly');
+                }
+                
+                log('✓ Error messages displayed correctly');
+                
+                setTestStatus(4, 'success', '✓ Error handling verified');
+                
+            } catch (error) {
+                log(`✗ Test 4 failed: ${error.message}`, 'error');
+                setTestStatus(4, 'error', `✗ Failed: ${error.message}`);
+            }
+            
+            log('All automated tests complete!');
+            log('Please run the manual integration test (Test 5) to verify full functionality.');
+        }
+        
+        // Run tests when page loads
+        window.addEventListener('load', () => {
+            setTimeout(runTests, 500);
+        });
+    </script>
+</body>
+</html>

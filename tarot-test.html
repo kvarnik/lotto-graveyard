@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tarot Module Test - Task 9.5</title>
+    <link rel="stylesheet" href="css/main.css">
+    <style>
+        .test-controls {
+            max-width: 600px;
+            margin: 2rem auto;
+            padding: 1rem;
+            background: #f0f0f0;
+            border: 2px solid #333;
+            border-radius: 4px;
+        }
+        .test-controls button {
+            margin: 0.5rem;
+        }
+        .test-output {
+            max-width: 600px;
+            margin: 1rem auto;
+            padding: 1rem;
+            background: #fff;
+            border: 2px solid #666;
+            border-radius: 4px;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <header role="banner">
+        <h1>Tarot Module Test</h1>
+        <p class="tagline">Testing Task 9.5: Tarot Prompt & Question Collection</p>
+    </header>
+
+    <main role="main" id="main-content">
+        <!-- Test Controls -->
+        <div class="test-controls">
+            <h2>Test Controls</h2>
+            <button id="test-show-prompt">1. Show Tarot Prompt</button>
+            <button id="test-validate-empty">2. Test Empty Question Validation</button>
+            <button id="test-validate-long">3. Test Long Question Validation</button>
+            <button id="test-validate-valid">4. Test Valid Question</button>
+        </div>
+
+        <!-- Test Output -->
+        <div class="test-output" id="test-output">
+            Waiting for test action...
+        </div>
+
+        <!-- Tarot Prompt Section -->
+        <section id="tarot-prompt-section" class="section hidden">
+            <h2>Seek Mystical Insight?</h2>
+            <div id="tarot-prompt-container"></div>
+        </section>
+
+        <!-- Question Section -->
+        <section id="question-section" class="section hidden">
+            <h2>Ask Your Question</h2>
+            <div id="question-container"></div>
+        </section>
+
+        <!-- Input Section (for decline testing) -->
+        <section id="input-section" class="section hidden">
+            <h2>Back to Input</h2>
+            <p>Decline button worked! Back at input screen.</p>
+        </section>
+
+        <!-- Tombstone Section (for decline testing) -->
+        <section id="tombstone-section" class="section hidden">
+            <h2>Tombstone</h2>
+            <p>Tombstone displayed here...</p>
+        </section>
+    </main>
+
+    <footer role="contentinfo">
+        <p>Test Page for Task 9.5 Implementation</p>
+    </footer>
+
+    <!-- Load dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/seedrandom@3/seedrandom.min.js"></script>
+    <script src="js/tarot-deck.js"></script>
+    <script src="js/tarot.js"></script>
+    
+    <script>
+        // Test lottery numbers
+        const testLotteryNumbers = {
+            whiteBalls: [5, 12, 23, 45, 67],
+            powerball: 13
+        };
+
+        // Initialize tarot module
+        const tarot = new TarotModule();
+        tarot.init();
+
+        // Test output element
+        const outputEl = document.getElementById('test-output');
+
+        function log(message) {
+            const timestamp = new Date().toLocaleTimeString();
+            outputEl.textContent += `\n[${timestamp}] ${message}`;
+        }
+
+        // Test 1: Show tarot prompt
+        document.getElementById('test-show-prompt').addEventListener('click', () => {
+            log('Test 1: Showing tarot prompt...');
+            const promptSection = document.getElementById('tarot-prompt-section');
+            const promptContainer = document.getElementById('tarot-prompt-container');
+            
+            promptSection.classList.remove('hidden');
+            tarot.showPrompt(testLotteryNumbers, promptContainer);
+            
+            log('✓ Prompt displayed with lottery numbers: ' + 
+                testLotteryNumbers.whiteBalls.join(', ') + ' + PB ' + testLotteryNumbers.powerball);
+            
+            // Set up callback to test question submission
+            tarot.onQuestionSubmit((question) => {
+                log('✓ Question submitted: "' + question + '"');
+                log('✓ Question length: ' + question.length + ' characters');
+            });
+        });
+
+        // Test 2: Validate empty question
+        document.getElementById('test-validate-empty').addEventListener('click', () => {
+            log('Test 2: Validating empty question...');
+            
+            const result1 = tarot.validateQuestion('');
+            log('Empty string: ' + (result1.valid ? '✗ FAIL' : '✓ PASS'));
+            if (!result1.valid) log('  Error: ' + result1.error);
+            
+            const result2 = tarot.validateQuestion('   ');
+            log('Whitespace only: ' + (result2.valid ? '✗ FAIL' : '✓ PASS'));
+            if (!result2.valid) log('  Error: ' + result2.error);
+            
+            const result3 = tarot.validateQuestion('\n\t  \n');
+            log('Whitespace chars: ' + (result3.valid ? '✗ FAIL' : '✓ PASS'));
+            if (!result3.valid) log('  Error: ' + result3.error);
+        });
+
+        // Test 3: Validate long question
+        document.getElementById('test-validate-long').addEventListener('click', () => {
+            log('Test 3: Validating too-long question...');
+            
+            const longQuestion = 'a'.repeat(201);
+            const result = tarot.validateQuestion(longQuestion);
+            
+            log('201 character string: ' + (result.valid ? '✗ FAIL' : '✓ PASS'));
+            if (!result.valid) log('  Error: ' + result.error);
+            
+            const exactlyMax = 'a'.repeat(200);
+            const result2 = tarot.validateQuestion(exactlyMax);
+            log('200 character string: ' + (result2.valid ? '✓ PASS' : '✗ FAIL'));
+        });
+
+        // Test 4: Validate valid question
+        document.getElementById('test-validate-valid').addEventListener('click', () => {
+            log('Test 4: Validating valid questions...');
+            
+            const result1 = tarot.validateQuestion('Will I find love?');
+            log('Normal question: ' + (result1.valid ? '✓ PASS' : '✗ FAIL'));
+            
+            const result2 = tarot.validateQuestion('a');
+            log('Single character: ' + (result2.valid ? '✓ PASS' : '✗ FAIL'));
+            
+            const result3 = tarot.validateQuestion('  What is my destiny?  ');
+            log('Question with whitespace: ' + (result3.valid ? '✓ PASS' : '✗ FAIL'));
+        });
+
+        log('Test page loaded. Click buttons above to run tests.');
+        log('After showing prompt, you can also test the UI interactively:');
+        log('- Click "Accept Reading" to see question form');
+        log('- Try submitting empty, too-long, and valid questions');
+        log('- Click "Decline" to test navigation back to input');
+    </script>
+</body>
+</html>
