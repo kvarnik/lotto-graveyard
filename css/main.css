@@ -301,6 +301,182 @@ select:focus {
     outline-offset: 2px;
 }
 
+/* Input Section */
+#input-section {
+    padding: 32px 18px 0;
+}
+
+#input-section h2 {
+    font-size: 26px;
+    margin-bottom: 12px;
+}
+
+/* Mode Toggle */
+.input-mode-toggle {
+    display: flex;
+    border: 3px solid var(--ink);
+    margin-bottom: 12px;
+}
+
+.input-mode-toggle button {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-weight: 800;
+    font-size: 16px;
+    cursor: pointer;
+    min-height: 44px;
+}
+
+.input-mode-toggle button.active {
+    background: var(--ink);
+    color: var(--mustard);
+}
+
+.input-mode-toggle button:focus {
+    outline: 3px solid var(--red);
+    outline-offset: -3px;
+    z-index: 1;
+}
+
+/* Tombstone Inputs - Creating the graveyard layout */
+.manual-input-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.form-group {
+    margin-bottom: 0;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--ink);
+    font-size: 14px;
+}
+
+/* Container for all 6 inputs with ground line */
+.white-balls-inputs {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 6px;
+    align-items: end;
+    border-bottom: 4px solid var(--ink);
+    padding-bottom: 0;
+}
+
+.white-balls-inputs input {
+    min-width: 0;
+    border: 3px solid var(--ink);
+    border-bottom: 0;
+    border-radius: var(--radius-tombstone);
+    background: var(--paper);
+    font-family: var(--font-display);
+    font-size: 20px;
+    text-align: center;
+    padding: 6px 0 0;
+    width: 100%;
+}
+
+.white-balls-inputs > div:nth-child(1) input { height: 74px; }
+.white-balls-inputs > div:nth-child(2) input { height: 84px; }
+.white-balls-inputs > div:nth-child(3) input { height: 78px; }
+.white-balls-inputs > div:nth-child(4) input { height: 88px; }
+.white-balls-inputs > div:nth-child(5) input { height: 76px; }
+
+/* Powerball crypt */
+.powerball-input {
+    border-bottom: 4px solid var(--ink);
+    padding-bottom: 0;
+    margin-top: 0 !important;
+}
+
+.powerball-input input {
+    height: 92px;
+    border: 3px solid var(--ink);
+    border-bottom: 0;
+    border-radius: var(--radius-crypt);
+    background: var(--red);
+    color: var(--paper);
+    font-family: var(--font-display);
+    font-size: 20px;
+    text-align: center;
+    padding: 6px 0 0;
+    width: 100%;
+}
+
+/* Focus states */
+input[type="number"]:focus {
+    outline: 3px solid var(--red);
+    outline-offset: 2px;
+    z-index: 1;
+}
+
+.powerball-input input:focus {
+    outline-color: var(--paper);
+}
+
+/* Submit Button */
+#submit-numbers-btn {
+    width: 100%;
+    min-height: 58px;
+    border: none;
+    background: var(--ink);
+    color: var(--mustard);
+    font-family: var(--font-display);
+    font-size: 18px;
+    cursor: pointer;
+    box-shadow: var(--shadow-cta);
+    transition: all 0.1s ease-out;
+    padding: 0;
+}
+
+#submit-numbers-btn:hover {
+    box-shadow: 6px 6px 0 var(--red);
+}
+
+#submit-numbers-btn:active {
+    box-shadow: 1px 1px 0 var(--red);
+    transform: translate(4px, 4px);
+}
+
+#submit-numbers-btn:focus {
+    outline: 3px solid var(--red);
+    outline-offset: 2px;
+}
+
+/* Error messages */
+.error-message {
+    color: var(--red);
+    font-weight: 700;
+    font-size: 14px;
+    display: block;
+    margin-top: 4px;
+}
+
+.error-message:empty {
+    display: none;
+}
+
+/* Screen reader only */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
 /* Buttons */
 button,
 .button {
