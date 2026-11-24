@@ -75,6 +75,8 @@ body {
     position: relative;
     overflow: hidden;
     aspect-ratio: 4 / 5;
+    max-width: 480px;
+    margin: 0 auto;
 }
 
 .hero-header {
@@ -167,6 +169,8 @@ body {
     gap: 10px;
     padding: 14px 18px 0;
     background: var(--cream);
+    max-width: 480px;
+    margin: 0 auto;
 }
 
 #share-buttons button {
@@ -223,7 +227,7 @@ body {
 /* Main Content */
 main {
     flex: 1;
-    max-width: 1200px;
+    max-width: 760px;
     width: 100%;
     margin: 0 auto;
     padding: var(--spacing-md) var(--spacing-sm);
@@ -241,6 +245,7 @@ main {
     font-size: 22px;
     margin-bottom: 16px;
     color: var(--ink);
+    text-align: left;
 }
 
 /* Footer */
@@ -304,11 +309,14 @@ select:focus {
 /* Input Section */
 #input-section {
     padding: 32px 18px 0;
+    max-width: 600px;
+    margin: 0 auto;
 }
 
 #input-section h2 {
     font-size: 26px;
     margin-bottom: 12px;
+    text-align: left;
 }
 
 /* Mode Toggle */
@@ -1487,6 +1495,14 @@ label {
         aspect-ratio: 4 / 5;
     }
     
+    #share-buttons {
+        max-width: 480px;
+    }
+    
+    #input-section {
+        max-width: 760px;
+    }
+    
     /* Below-fold content */
     main {
         max-width: 760px;
@@ -1497,6 +1513,7 @@ label {
         display: flex;
         justify-content: center;
         gap: 16px;
+        flex-wrap: wrap;
     }
     
     .tarot-card-container {
@@ -1520,5 +1537,29 @@ label {
         #share-buttons button:hover {
             background: var(--cream);
         }
+    }
+}
+
+/* Mobile optimizations */
+@media (max-width: 480px) {
+    #hero-card {
+        width: 100%;
+        max-width: 100%;
+    }
+    
+    #hero-card h1 {
+        font-size: 48px;
+    }
+    
+    #share-buttons {
+        width: 100%;
+        max-width: 100%;
+        padding-left: 18px;
+        padding-right: 18px;
+    }
+    
+    .white-balls-inputs input,
+    .powerball-input input {
+        font-size: 18px;
     }
 }
