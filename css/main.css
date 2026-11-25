@@ -1,25 +1,34 @@
 /* Lotto Graveyard - Main Stylesheet */
-/* 1909 Rider-Waite Theme with Grayscale Palette */
+/* Funeral March Theme */
 
 /* CSS Variables */
 :root {
-    --color-black: #000000;
-    --color-dark-gray: #333333;
-    --color-medium-gray: #666666;
-    --color-light-gray: #999999;
-    --color-pale-gray: #CCCCCC;
-    --color-white: #FFFFFF;
+    /* Funeral March Colors */
+    --mustard: #F2C230;
+    --ink: #1B1A17;
+    --cream: #FFF6DC;
+    --paper: #FFFFFF;
+    --red: #C8402F;
     
-    --font-serif: Georgia, 'Times New Roman', serif;
-    --font-sans: Arial, Helvetica, sans-serif;
+    /* Typography */
+    --font-display: Bungee, Impact, 'Arial Black', sans-serif;
+    --font-body: 'Bricolage Grotesque', system-ui, sans-serif;
     
+    /* Borders & Shadows */
+    --border: 3px solid var(--ink);
+    --shadow-cta: 5px 5px 0 var(--red);
+    --shadow-card: 4px 4px 0 var(--ink);
+    
+    /* Radii */
+    --radius-tombstone: 26px 26px 0 0;
+    --radius-crypt: 4px 4px 0 0;
+    
+    /* Spacing */
     --spacing-xs: 8px;
     --spacing-sm: 16px;
     --spacing-md: 24px;
     --spacing-lg: 32px;
     --spacing-xl: 48px;
-    
-    --border-radius: 4px;
     --touch-target-min: 44px;
 }
 
@@ -31,11 +40,12 @@
 }
 
 body {
-    font-family: var(--font-serif);
+    font-family: var(--font-body);
     font-size: 16px;
+    font-weight: 500;
     line-height: 1.6;
-    color: var(--color-dark-gray);
-    background-color: var(--color-pale-gray);
+    color: var(--ink);
+    background-color: var(--cream);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -46,8 +56,8 @@ body {
     position: absolute;
     top: -40px;
     left: 0;
-    background: var(--color-black);
-    color: var(--color-white);
+    background: var(--ink);
+    color: var(--paper);
     padding: 8px;
     text-decoration: none;
     z-index: 100;
@@ -57,31 +67,167 @@ body {
     top: 0;
 }
 
-/* Header */
-header {
-    background-color: var(--color-dark-gray);
-    color: var(--color-white);
-    text-align: center;
-    padding: var(--spacing-lg) var(--spacing-sm);
-    border-bottom: 4px solid var(--color-black);
+/* Hero / Share Card */
+#hero-card {
+    background: var(--mustard);
+    border-bottom: 4px solid var(--ink);
+    padding: 18px 18px 0;
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 4 / 5;
+    max-width: 480px;
+    margin: 0 auto;
 }
 
-header h1 {
-    font-size: clamp(2rem, 5vw, 3rem);
-    margin-bottom: var(--spacing-xs);
-    font-weight: bold;
+.hero-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 22px;
 }
 
-header .tagline {
-    font-size: clamp(1rem, 2.5vw, 1.25rem);
-    font-style: italic;
-    color: var(--color-pale-gray);
+.wordmark {
+    font-family: var(--font-display);
+    font-size: 16px;
+    color: var(--ink);
+    text-decoration: none;
+}
+
+#menu-btn {
+    width: 44px;
+    height: 44px;
+    border: 3px solid var(--ink);
+    background: var(--mustard);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--ink);
+    padding: 0;
+}
+
+#hero-card h1 {
+    font-size: 54px;
+    line-height: 0.92;
+    letter-spacing: -0.01em;
+    margin-bottom: 10px;
+}
+
+.hero-tagline {
+    font-size: 19px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.funeral-procession {
+    position: absolute;
+    left: 18px;
+    bottom: 44px;
+    width: calc(100% - 36px);
+    height: auto;
+}
+
+.funeral-ball {
+    animation: funeral-bob 2s ease-in-out infinite;
+}
+
+.funeral-ball:nth-child(2) { animation-delay: 0.1s; }
+.funeral-ball:nth-child(3) { animation-delay: 0.2s; }
+.funeral-ball:nth-child(4) { animation-delay: 0.3s; }
+.funeral-ball:nth-child(5) { animation-delay: 0.4s; }
+.funeral-ball:nth-child(6) { animation-delay: 0.5s; }
+
+@keyframes funeral-bob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .funeral-ball { animation: none; }
+}
+
+.hero-footer {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 40px;
+    background: var(--ink);
+    color: var(--mustard);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 18px;
+    font-family: var(--font-display);
+    font-size: 13px;
+}
+
+/* Share Buttons */
+#share-buttons {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    padding: 14px 18px 0;
+    background: var(--cream);
+    max-width: 480px;
+    margin: 0 auto;
+}
+
+#share-buttons button {
+    min-height: 50px;
+    border: 3px solid var(--ink);
+    background: var(--paper);
+    font-family: var(--font-body);
+    font-weight: 800;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    padding: 0 12px;
+}
+
+#share-buttons button svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+}
+
+#share-buttons button:focus {
+    outline: 3px solid var(--red);
+    outline-offset: 2px;
+}
+
+/* Toast notification */
+.share-toast {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--paper);
+    border: 3px solid var(--ink);
+    padding: 12px 20px;
+    font-weight: 700;
+    box-shadow: var(--shadow-card);
+    animation: toast-in 0.3s, toast-out 0.3s 2.7s;
+    z-index: 1001;
+}
+
+@keyframes toast-in {
+    from { opacity: 0; transform: translate(-50%, 20px); }
+    to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+@keyframes toast-out {
+    from { opacity: 1; }
+    to { opacity: 0; }
 }
 
 /* Main Content */
 main {
     flex: 1;
-    max-width: 1200px;
+    max-width: 760px;
     width: 100%;
     margin: 0 auto;
     padding: var(--spacing-md) var(--spacing-sm);
@@ -96,37 +242,43 @@ main {
 }
 
 .section h2 {
-    font-size: clamp(1.5rem, 4vw, 2rem);
-    margin-bottom: var(--spacing-md);
-    text-align: center;
-    color: var(--color-black);
+    font-size: 22px;
+    margin-bottom: 16px;
+    color: var(--ink);
+    text-align: left;
 }
 
 /* Footer */
 footer {
-    background-color: var(--color-dark-gray);
-    color: var(--color-white);
-    text-align: center;
-    padding: var(--spacing-md) var(--spacing-sm);
-    border-top: 4px solid var(--color-black);
+    border-top: 4px solid var(--ink);
+    background: var(--cream);
+    padding: 26px 18px 30px;
+    font-size: 14px;
+    line-height: 1.45;
     margin-top: auto;
 }
 
+footer nav {
+    display: flex;
+    gap: 18px;
+    margin-bottom: 10px;
+}
+
 footer a {
-    color: var(--color-pale-gray);
-    text-decoration: none;
+    color: var(--ink);
+    text-decoration: underline;
 }
 
 footer a:hover,
 footer a:focus {
-    text-decoration: underline;
-    color: var(--color-white);
+    color: var(--red);
 }
 
 /* Typography */
 h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-serif);
-    font-weight: bold;
+    font-family: var(--font-display);
+    font-weight: 400;
+    line-height: 1;
 }
 
 p {
@@ -135,13 +287,13 @@ p {
 
 /* Links */
 a {
-    color: var(--color-dark-gray);
+    color: var(--ink);
     text-decoration: underline;
 }
 
 a:hover,
 a:focus {
-    color: var(--color-black);
+    color: var(--red);
 }
 
 /* Focus Indicators */
@@ -150,8 +302,187 @@ button:focus,
 input:focus,
 textarea:focus,
 select:focus {
-    outline: 3px solid var(--color-black);
+    outline: 3px solid var(--red);
     outline-offset: 2px;
+}
+
+/* Input Section */
+#input-section {
+    padding: 32px 18px 0;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+#input-section h2 {
+    font-size: 26px;
+    margin-bottom: 12px;
+    text-align: left;
+}
+
+/* Mode Toggle */
+.input-mode-toggle {
+    display: flex;
+    border: 3px solid var(--ink);
+    margin-bottom: 12px;
+}
+
+.input-mode-toggle button {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-weight: 800;
+    font-size: 16px;
+    cursor: pointer;
+    min-height: 44px;
+}
+
+.input-mode-toggle button.active {
+    background: var(--ink);
+    color: var(--mustard);
+}
+
+.input-mode-toggle button:focus {
+    outline: 3px solid var(--red);
+    outline-offset: -3px;
+    z-index: 1;
+}
+
+/* Tombstone Inputs - Creating the graveyard layout */
+.manual-input-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.form-group {
+    margin-bottom: 0;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--ink);
+    font-size: 14px;
+}
+
+/* Container for all 6 inputs with ground line */
+.white-balls-inputs {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 6px;
+    align-items: end;
+    border-bottom: 4px solid var(--ink);
+    padding-bottom: 0;
+}
+
+.white-balls-inputs input {
+    min-width: 0;
+    border: 3px solid var(--ink);
+    border-bottom: 0;
+    border-radius: var(--radius-tombstone);
+    background: var(--paper);
+    font-family: var(--font-display);
+    font-size: 20px;
+    text-align: center;
+    padding: 6px 0 0;
+    width: 100%;
+}
+
+.white-balls-inputs > div:nth-child(1) input { height: 74px; }
+.white-balls-inputs > div:nth-child(2) input { height: 84px; }
+.white-balls-inputs > div:nth-child(3) input { height: 78px; }
+.white-balls-inputs > div:nth-child(4) input { height: 88px; }
+.white-balls-inputs > div:nth-child(5) input { height: 76px; }
+
+/* Powerball crypt */
+.powerball-input {
+    border-bottom: 4px solid var(--ink);
+    padding-bottom: 0;
+    margin-top: 0 !important;
+}
+
+.powerball-input input {
+    height: 92px;
+    border: 3px solid var(--ink);
+    border-bottom: 0;
+    border-radius: var(--radius-crypt);
+    background: var(--red);
+    color: var(--paper);
+    font-family: var(--font-display);
+    font-size: 20px;
+    text-align: center;
+    padding: 6px 0 0;
+    width: 100%;
+}
+
+/* Focus states */
+input[type="number"]:focus {
+    outline: 3px solid var(--red);
+    outline-offset: 2px;
+    z-index: 1;
+}
+
+.powerball-input input:focus {
+    outline-color: var(--paper);
+}
+
+/* Submit Button */
+#submit-numbers-btn {
+    width: 100%;
+    min-height: 58px;
+    border: none;
+    background: var(--ink);
+    color: var(--mustard);
+    font-family: var(--font-display);
+    font-size: 18px;
+    cursor: pointer;
+    box-shadow: var(--shadow-cta);
+    transition: all 0.1s ease-out;
+    padding: 0;
+}
+
+#submit-numbers-btn:hover {
+    box-shadow: 6px 6px 0 var(--red);
+}
+
+#submit-numbers-btn:active {
+    box-shadow: 1px 1px 0 var(--red);
+    transform: translate(4px, 4px);
+}
+
+#submit-numbers-btn:focus {
+    outline: 3px solid var(--red);
+    outline-offset: 2px;
+}
+
+/* Error messages */
+.error-message {
+    color: var(--red);
+    font-weight: 700;
+    font-size: 14px;
+    display: block;
+    margin-top: 4px;
+}
+
+.error-message:empty {
+    display: none;
+}
+
+/* Screen reader only */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
 }
 
 /* Buttons */
@@ -941,4 +1272,497 @@ label {
     .error-content p {
         margin-bottom: var(--spacing-sm);
     }
+}
+
+/* ===== FUNERAL MARCH REDESIGN STYLES ===== */
+
+/* Tombstone Results */
+#tombstone-container {
+    background: var(--paper);
+    border: 3px solid var(--ink);
+    border-radius: var(--radius-tombstone);
+    box-shadow: var(--shadow-card);
+    padding: 30px 20px;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.tombstone-numbers {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.tombstone-numbers .number {
+    width: 44px;
+    height: 44px;
+    border: 3px solid var(--ink);
+    border-radius: 50%;
+    background: var(--paper);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-display);
+    font-size: 16px;
+}
+
+.tombstone-numbers .number.powerball {
+    background: var(--red);
+    color: var(--paper);
+}
+
+.tombstone-epitaph {
+    font-style: italic;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--ink);
+}
+
+/* Tarot Sections */
+.prompt-container,
+#question-container,
+#card-display-container,
+#fortune-container {
+    background: var(--paper);
+    border: 3px solid var(--ink);
+    box-shadow: var(--shadow-card);
+    padding: 24px;
+    margin-bottom: 24px;
+}
+
+/* Tarot Cards */
+.tarot-card-container {
+    display: inline-block;
+    background: var(--paper);
+    border: 3px solid var(--ink);
+    box-shadow: var(--shadow-card);
+    padding: 12px;
+    margin: 8px;
+}
+
+.tarot-card-container:nth-child(1) { transform: rotate(-2deg); }
+.tarot-card-container:nth-child(2) { transform: rotate(0deg); }
+.tarot-card-container:nth-child(3) { transform: rotate(2deg); }
+
+.tarot-card img {
+    display: block;
+    width: 100%;
+    max-width: 200px;
+    height: auto;
+}
+
+.tarot-card-name {
+    margin-top: 10px;
+    font-family: var(--font-display);
+    font-size: 13px;
+    text-align: center;
+}
+
+.tarot-card-position {
+    font-size: 11px;
+    text-transform: uppercase;
+    text-align: center;
+    color: var(--ink);
+    opacity: 0.6;
+}
+
+/* Fortune Text */
+.fortune-text {
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    background: transparent;
+    border: none;
+    padding: 0;
+}
+
+/* Buttons */
+.btn-primary,
+.btn-secondary {
+    padding: 14px 24px;
+    border: 3px solid var(--ink);
+    font-family: var(--font-body);
+    font-weight: 800;
+    font-size: 16px;
+    cursor: pointer;
+    min-height: 44px;
+}
+
+.btn-primary {
+    background: var(--ink);
+    color: var(--mustard);
+    box-shadow: var(--shadow-cta);
+}
+
+.btn-secondary {
+    background: var(--paper);
+    color: var(--ink);
+}
+
+.btn-primary:focus,
+.btn-secondary:focus {
+    outline: 3px solid var(--red);
+    outline-offset: 2px;
+}
+
+/* Loading overlay */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 246, 220, 0.95);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.loading-spinner {
+    border: 4px solid var(--ink);
+    border-top-color: var(--mustard);
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Hidden utility */
+.hidden {
+    display: none !important;
+}
+
+/* Utility Classes */
+.text-center {
+    text-align: center;
+}
+
+/* Webcam Scanner */
+.webcam-scanner {
+    padding: 20px;
+}
+
+.video-container {
+    border: 3px solid var(--ink);
+    background: var(--ink);
+    margin-bottom: 16px;
+    overflow: hidden;
+}
+
+#webcam-video {
+    width: 100%;
+    display: block;
+}
+
+.scanner-controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.scanner-status,
+.scanner-fallback {
+    font-size: 14px;
+    padding: 12px;
+    background: var(--cream);
+    border: 2px solid var(--ink);
+    margin-top: 12px;
+}
+
+.link-button {
+    background: none;
+    border: none;
+    color: var(--red);
+    text-decoration: underline;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: inherit;
+    padding: 0;
+    min-height: auto;
+}
+
+/* ===== DESKTOP RESPONSIVE LAYOUT ===== */
+@media (min-width: 960px) {
+    #hero-card {
+        max-width: 480px;
+        aspect-ratio: 4 / 5;
+    }
+    
+    #share-buttons {
+        max-width: 480px;
+    }
+    
+    #input-section {
+        max-width: 760px;
+    }
+    
+    /* Below-fold content */
+    main {
+        max-width: 760px;
+    }
+    
+    /* Tarot cards in a row */
+    #card-display-container {
+        display: flex;
+        justify-content: center;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+    
+    .tarot-card-container {
+        margin: 0;
+    }
+    
+    /* Hover states */
+    @media (hover: hover) {
+        button:hover {
+            box-shadow: 6px 6px 0 var(--red);
+        }
+        
+        .btn-primary:hover {
+            box-shadow: 6px 6px 0 var(--red);
+        }
+        
+        .tarot-card-container:hover {
+            box-shadow: 6px 6px 0 var(--ink);
+        }
+        
+        #share-buttons button:hover {
+            background: var(--cream);
+        }
+    }
+}
+
+/* Mobile optimizations */
+@media (max-width: 480px) {
+    #hero-card {
+        width: 100%;
+        max-width: 100%;
+    }
+    
+    #hero-card h1 {
+        font-size: 48px;
+    }
+    
+    #share-buttons {
+        width: 100%;
+        max-width: 100%;
+        padding-left: 18px;
+        padding-right: 18px;
+    }
+    
+    .white-balls-inputs input,
+    .powerball-input input {
+        font-size: 18px;
+    }
+}
+
+/* Simplified Tarot Reading Styles */
+.interpretation-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: #f5f5f5;
+    border: 4px solid #000;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.interpretation-container h3 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: #000;
+}
+
+.interpretation-intro {
+    font-size: 1.125rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    color: #333;
+}
+
+.card-meanings {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+
+.card-meaning {
+    padding: 1.5rem;
+    background-color: #fff;
+    border: 2px solid #666;
+    border-radius: 4px;
+}
+
+.card-meaning h4 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: #000;
+}
+
+.card-meaning p {
+    font-size: 1rem;
+    color: #666;
+    line-height: 1.5;
+}
+
+@media (min-width: 768px) {
+    .card-meanings {
+        flex-direction: row;
+    }
+    
+    .card-meaning {
+        flex: 1;
+    }
+}
+
+.fortune-actions {
+    margin-top: 2rem;
+}
+
+/* Navigation Menu */
+.nav-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1000;
+    display: none;
+}
+
+.nav-menu:not(.hidden) {
+    display: block;
+}
+
+.nav-menu-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    animation: fadeIn 0.3s ease;
+}
+
+.nav-menu-content {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 300px;
+    max-width: 80vw;
+    height: 100%;
+    background-color: #fff;
+    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.3);
+    padding: 2rem;
+    animation: slideInRight 0.3s ease;
+}
+
+.close-menu-btn {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    color: #333;
+}
+
+.close-menu-btn:hover {
+    color: #000;
+}
+
+.nav-menu-items {
+    list-style: none;
+    padding: 0;
+    margin: 3rem 0 0 0;
+}
+
+.nav-menu-items li {
+    margin-bottom: 1rem;
+}
+
+.nav-menu-items a {
+    display: block;
+    padding: 0.75rem 1rem;
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #333;
+    text-decoration: none;
+    border-left: 3px solid transparent;
+    transition: all 0.2s ease;
+}
+
+.nav-menu-items a:hover {
+    color: #000;
+    border-left-color: #000;
+    background-color: #f5f5f5;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+    }
+    to {
+        transform: translateX(0);
+    }
+}
+
+/* Make "BURY YOURS" clickable */
+.hero-footer {
+    cursor: pointer;
+}
+
+.hero-footer span:last-child {
+    transition: transform 0.2s ease;
+}
+
+.hero-footer:hover span:last-child {
+    transform: translateX(5px);
+}
+
+/* Fix hero-footer link styles */
+a.hero-footer {
+    text-decoration: none;
+    color: var(--mustard);
+}
+
+a.hero-footer:hover {
+    color: var(--mustard);
+}
+
+a.hero-footer .site-url {
+    color: var(--mustard);
+}
+
+/* Ensure navigation menu is fully clickable */
+.nav-menu {
+    pointer-events: none;
+}
+
+.nav-menu:not(.hidden) {
+    pointer-events: auto;
+}
+
+.nav-menu-overlay {
+    pointer-events: auto;
+}
+
+.nav-menu-content {
+    pointer-events: auto;
+    z-index: 1001;
 }

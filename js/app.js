@@ -938,4 +938,56 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('Failed to initialize app:', error);
         alert('Failed to load the application. Please refresh the page.');
     });
+    
+    // Share functionality
+    const shareBtn = document.getElementById('share-btn');
+    const copyLinkBtn = document.getElementById('copy-link-btn');
+    
+    if (shareBtn) {
+        shareBtn.addEventListener('click', async () => {
+            const shareData = {
+                title: 'RIP my numbers · Lotto Graveyard',
+                text: 'They died as they lived: not matching.',
+                url: window.location.href
+            };
+            
+            try {
+                if (navigator.share) {
+                    await navigator.share(shareData);
+                } else {
+                    await navigator.clipboard.writeText(window.location.href);
+                    showToast('Link copied');
+                }
+            } catch (err) {
+                if (err.name !== 'AbortError') {
+                    console.error('Share failed:', err);
+                }
+            }
+        });
+    }
+    
+    if (copyLinkBtn) {
+        copyLinkBtn.addEventListener('click', async () => {
+            try {
+                await navigator.clipboard.writeText(window.location.href);
+                showToast('Link copied');
+            } catch (err) {
+                console.error('Copy failed:', err);
+            }
+        });
+    }
+    
+    function showToast(message) {
+        const toast = document.createElement('div');
+        toast.className = 'share-toast';
+        toast.textContent = message;
+        toast.setAttribute('role', 'status');
+        toast.setAttribute('aria-live', 'polite');
+        
+        document.body.appendChild(toast);
+        
+        setTimeout(() => {
+            toast.remove();
+        }, 3000);
+    }
 });
