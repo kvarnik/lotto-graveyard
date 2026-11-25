@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Site Loading</title>
+</head>
+<body>
+    <h1>JavaScript Module Test</h1>
+    <div id="results"></div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/seedrandom@3/seedrandom.min.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/validation.js"></script>
+    <script src="js/data-loader.js"></script>
+    <script src="js/analysis.js"></script>
+    <script src="js/tombstone.js"></script>
+    <script src="js/tarot-deck.js"></script>
+    <script src="js/tarot.js"></script>
+    <script src="js/fortune-client.js"></script>
+    <script src="js/input.js"></script>
+    
+    <script>
+        const results = document.getElementById('results');
+        const checks = [];
+        
+        // Check if all required classes/objects are defined
+        checks.push(['CONFIG', typeof CONFIG !== 'undefined']);
+        checks.push(['validateLotteryNumbers', typeof validateLotteryNumbers === 'function']);
+        checks.push(['DataLoader', typeof DataLoader === 'function']);
+        checks.push(['HistoricalAnalysis', typeof HistoricalAnalysis === 'function']);
+        checks.push(['TombstoneRenderer', typeof TombstoneRenderer === 'function']);
+        checks.push(['TAROT_DECK', typeof TAROT_DECK !== 'undefined']);
+        checks.push(['TarotModule', typeof TarotModule === 'function']);
+        checks.push(['FortuneClient', typeof FortuneClient === 'function']);
+        checks.push(['InputModule', typeof InputModule === 'function']);
+        
+        let html = '<ul>';
+        checks.forEach(([name, passed]) => {
+            html += `<li style="color: ${passed ? 'green' : 'red'}">${name}: ${passed ? '✓' : '✗ MISSING'}</li>`;
+        });
+        html += '</ul>';
+        
+        results.innerHTML = html;
+        
+        const allPassed = checks.every(([, passed]) => passed);
+        if (allPassed) {
+            results.innerHTML += '<p style="color: green; font-weight: bold;">All modules loaded successfully!</p>';
+        } else {
+            results.innerHTML += '<p style="color: red; font-weight: bold;">Some modules failed to load!</p>';
+        }
+    </script>
+</body>
+</html>
