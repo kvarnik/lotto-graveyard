@@ -55,14 +55,21 @@ class LottoGraveyardApp {
     showLoading(msg) {
         const overlay = document.getElementById('loading-overlay');
         if (overlay) {
-            overlay.querySelector('.loading-status').textContent = msg;
-            overlay.classList.add('visible');
+            const statusEl = overlay.querySelector('.loading-status');
+            if (statusEl) {
+                statusEl.textContent = msg;
+            }
+            overlay.classList.remove('hidden');
+            overlay.setAttribute('aria-busy', 'true');
         }
     }
     
     hideLoading() {
         const overlay = document.getElementById('loading-overlay');
-        if (overlay) overlay.classList.remove('visible');
+        if (overlay) {
+            overlay.classList.add('hidden');
+            overlay.setAttribute('aria-busy', 'false');
+        }
     }
 }
 document.addEventListener('DOMContentLoaded', () => new LottoGraveyardApp().init());

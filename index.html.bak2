@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="They died as they lived: not matching. Give your lottery tickets the send-off they deserve with historical analysis and tarot readings.">
+    <title>Lotto Graveyard - Powerball Number Analysis & Tarot Readings</title>
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="RIP my numbers · Lotto Graveyard">
+    <meta property="og:description" content="They died as they lived: not matching. Give your lottery tickets the send-off they deserve.">
+    <meta property="og:image" content="https://kvarnik.github.io/lotto-graveyard/assets/social/og-1200x630.png">
+    <meta property="og:url" content="https://kvarnik.github.io/lotto-graveyard/">
+    <meta property="og:type" content="website">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="RIP my numbers · Lotto Graveyard">
+    <meta name="twitter:description" content="They died as they lived: not matching.">
+    <meta name="twitter:image" content="https://kvarnik.github.io/lotto-graveyard/assets/social/card-1080x1350.png">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+    <!-- Skip link for accessibility -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <!-- Hero / Share Card -->
+    <section id="hero-card" aria-label="Share card">
+        <div class="hero-header">
+            <a href="#main-content" class="wordmark">LOTTO GRAVEYARD</a>
+            <button type="button" id="menu-btn" aria-label="Open menu">
+                <svg width="18" height="14" viewBox="0 0 18 14" aria-hidden="true">
+                    <path d="M0 1h18M0 7h18M0 13h18" stroke="currentColor" stroke-width="3"/>
+                </svg>
+            </button>
+        </div>
+        
+        <h1>RIP MY<br>NUMBERS</h1>
+        <p class="hero-tagline">They died as they lived: not matching.</p>
+        
+        <svg class="funeral-procession" viewBox="0 0 354 190" role="img" aria-label="Five lottery balls in top hats march in a funeral procession carrying a ticket-shaped coffin, followed by a red Powerball waving a tiny black flag">
+            <path d="M0 176h354" stroke="var(--ink)" stroke-width="4"/>
+            <rect x="76" y="62" width="150" height="40" rx="4" fill="#5A3E22" stroke="var(--ink)" stroke-width="3.5"/>
+            <path d="M90 74h40M90 84h60M90 94h30" stroke="#E8C79A" stroke-width="3"/>
+            <text x="196" y="90" text-anchor="middle" font-family="Bungee, sans-serif" font-size="13" fill="#E8C79A">RIP</text>
+            <g stroke="var(--ink)" stroke-width="3" stroke-linecap="round">
+                <path d="M28 156l-6 20M40 156l6 20M98 156l-8 20M110 156l8 20M150 156l-6 20M162 156l6 20M206 156l-8 20M218 156l8 20M262 156l-6 20M274 156l6 20M314 156l-6 20M326 156l6 20"/>
+                <path d="M100 120l8-18M158 120v-18M212 120l-6-18"/>
+            </g>
+            <g fill="var(--paper)" stroke="var(--ink)" stroke-width="3.5">
+                <circle class="funeral-ball" cx="34" cy="138" r="22"/>
+                <circle class="funeral-ball" cx="104" cy="138" r="22"/>
+                <circle class="funeral-ball" cx="156" cy="138" r="22"/>
+                <circle class="funeral-ball" cx="212" cy="138" r="22"/>
+                <circle class="funeral-ball" cx="268" cy="138" r="22"/>
+            </g>
+            <circle class="funeral-ball" cx="320" cy="138" r="22" fill="var(--red)" stroke="var(--ink)" stroke-width="3.5"/>
+            <g font-family="Bungee, sans-serif" font-size="15" text-anchor="middle" fill="var(--ink)">
+                <text x="34" y="144">07</text>
+                <text x="104" y="144">14</text>
+                <text x="156" y="144">22</text>
+                <text x="212" y="144">31</text>
+                <text x="268" y="144">38</text>
+            </g>
+            <text x="320" y="144" text-anchor="middle" font-family="Bungee, sans-serif" font-size="15" fill="var(--paper)">09</text>
+            <g fill="var(--ink)">
+                <rect x="20" y="104" width="28" height="12"/>
+                <rect x="14" y="114" width="40" height="4"/>
+                <rect x="254" y="104" width="28" height="12"/>
+                <rect x="248" y="114" width="40" height="4"/>
+                <rect x="306" y="104" width="28" height="12"/>
+                <rect x="300" y="114" width="40" height="4"/>
+            </g>
+            <g fill="var(--ink)">
+                <circle cx="27" cy="134" r="2.5"/>
+                <circle cx="41" cy="134" r="2.5"/>
+                <circle cx="261" cy="134" r="2.5"/>
+                <circle cx="275" cy="134" r="2.5"/>
+                <circle cx="313" cy="134" r="2.5"/>
+                <circle cx="327" cy="134" r="2.5"/>
+            </g>
+            <path d="M28 128l5 2M40 128l-5 2" stroke="var(--ink)" stroke-width="2"/>
+            <path d="M342 132l6-50" stroke="var(--ink)" stroke-width="3"/>
+            <path d="M348 82l-26 8 24 10z" fill="var(--ink)"/>
+        </svg>
+        
+        <div class="hero-footer">
+            <span class="site-url">lotto-graveyard.github.io</span>
+            <span>BURY YOURS →</span>
+        </div>
+    </section>
+
+    <!-- Share Buttons -->
+    <div id="share-buttons">
+        <button type="button" id="share-btn">
+            <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
+                <circle cx="4" cy="9" r="2.5" fill="none" stroke="currentColor" stroke-width="2"/>
+                <circle cx="14" cy="3.5" r="2.5" fill="none" stroke="currentColor" stroke-width="2"/>
+                <circle cx="14" cy="14.5" r="2.5" fill="none" stroke="currentColor" stroke-width="2"/>
+                <path d="M6 8l6-3.5M6 10l6 3.5" stroke="currentColor" stroke-width="2"/>
+            </svg>
+            Share the grief
+        </button>
+        <button type="button" id="copy-link-btn">Copy link</button>
+    </div>
+
+    <main role="main" id="main-content">
+        <!-- Number Input Section -->
+        <section id="input-section" class="section" aria-labelledby="input-heading">
+            <h2 id="input-heading">Enter Your Powerball Numbers</h2>
+            <div id="input-container" role="region" aria-label="Number input options">
+                <!-- Input Mode Toggle -->
+                <div class="input-mode-toggle">
+                    <button type="button" id="manual-mode-btn" class="active" aria-pressed="true">
+                        Manual Entry
+                    </button>
+                    <button type="button" id="webcam-mode-btn" aria-pressed="false">
+                        Scan Ticket
+                    </button>
+                </div>
+
+                <!-- Manual input form -->
+                <div id="manual-input-container">
+                    <form id="manual-input-form" class="manual-input-form" novalidate>
+                        <!-- White Ball Inputs -->
+                        <div class="form-group">
+                            <label for="white-ball-1">
+                                White Ball Numbers (1-69)
+                                <span class="sr-only">Enter 5 unique numbers between 1 and 69</span>
+                            </label>
+                            <div class="white-balls-inputs">
+                                <div>
+                                    <label for="white-ball-1" class="sr-only">White Ball 1</label>
+                                    <input 
+                                        type="number" 
+                                        id="white-ball-1" 
+                                        name="white-ball-1"
+                                        min="1" 
+                                        max="69" 
+                                        required
+                                        aria-required="true"
+                                        aria-invalid="false"
+                                        aria-describedby="white-ball-1-error"
+                                        placeholder="1-69"
+                                    >
+                                    <span id="white-ball-1-error" class="error-message" role="alert" aria-live="polite"></span>
+                                </div>
+                                <div>
+                                    <label for="white-ball-2" class="sr-only">White Ball 2</label>
+                                    <input 
+                                        type="number" 
+                                        id="white-ball-2" 
+                                        name="white-ball-2"
+                                        min="1" 
+                                        max="69" 
+                                        required
+                                        aria-required="true"
+                                        aria-invalid="false"
+                                        aria-describedby="white-ball-2-error"
+                                        placeholder="1-69"
+                                    >
+                                    <span id="white-ball-2-error" class="error-message" role="alert" aria-live="polite"></span>
+                                </div>
+                                <div>
+                                    <label for="white-ball-3" class="sr-only">White Ball 3</label>
+                                    <input 
+                                        type="number" 
+                                        id="white-ball-3" 
+                                        name="white-ball-3"
+                                        min="1" 
+                                        max="69" 
+                                        required
+                                        aria-required="true"
+                                        aria-invalid="false"
+                                        aria-describedby="white-ball-3-error"
+                                        placeholder="1-69"
+                                    >
+                                    <span id="white-ball-3-error" class="error-message" role="alert" aria-live="polite"></span>
+                                </div>
+                                <div>
+                                    <label for="white-ball-4" class="sr-only">White Ball 4</label>
+                                    <input 
+                                        type="number" 
+                                        id="white-ball-4" 
+                                        name="white-ball-4"
+                                        min="1" 
+                                        max="69" 
+                                        required
+                                        aria-required="true"
+                                        aria-invalid="false"
+                                        aria-describedby="white-ball-4-error"
+                                        placeholder="1-69"
+                                    >
+                                    <span id="white-ball-4-error" class="error-message" role="alert" aria-live="polite"></span>
+                                </div>
+                                <div>
+                                    <label for="white-ball-5" class="sr-only">White Ball 5</label>
+                                    <input 
+                                        type="number" 
+                                        id="white-ball-5" 
+                                        name="white-ball-5"
+                                        min="1" 
+                                        max="69" 
+                                        required
+                                        aria-required="true"
+                                        aria-invalid="false"
+                                        aria-describedby="white-ball-5-error"
+                                        placeholder="1-69"
+                                    >
+                                    <span id="white-ball-5-error" class="error-message" role="alert" aria-live="polite"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Powerball Input -->
+                        <div class="form-group powerball-input">
+                            <label for="powerball">
+                                Powerball Number (1-26)
+                            </label>
+                            <input 
+                                type="number" 
+                                id="powerball" 
+                                name="powerball"
+                                min="1" 
+                                max="26" 
+                                required
+                                aria-required="true"
+                                aria-invalid="false"
+                                aria-describedby="powerball-error"
+                                placeholder="1-26"
+                            >
+                            <span id="powerball-error" class="error-message" role="alert" aria-live="polite"></span>
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div class="form-group text-center">
+                            <button type="submit" id="submit-numbers-btn">
+                                START THE PROCESSION
+                            </button>
+                        </div>
+
+                        <!-- General form errors -->
+                        <div id="form-error" class="error-message text-center" role="alert" aria-live="polite"></div>
+                    </form>
+                </div>
+
+                <!-- Webcam scanner interface -->
+                <div id="webcam-scanner-container" class="hidden">
+                    <div class="webcam-scanner">
+                        <!-- Video preview -->
+                        <div class="video-container">
+                            <video 
+                                id="webcam-video" 
+                                autoplay 
+                                playsinline
+                                aria-label="Live camera feed for ticket scanning"
+                            ></video>
+                            <canvas 
+                                id="webcam-canvas" 
+                                style="display: none;"
+                                aria-hidden="true"
+                            ></canvas>
+                        </div>
+                        
+                        <!-- Scanner controls -->
+                        <div class="scanner-controls">
+                            <button 
+                                type="button" 
+                                id="start-camera-btn"
+                                class="btn-primary"
+                            >
+                                Start Camera
+                            </button>
+                            <button 
+                                type="button" 
+                                id="stop-camera-btn"
+                                class="btn-secondary hidden"
+                            >
+                                Stop Camera
+                            </button>
+                            <button 
+                                type="button" 
+                                id="switch-camera-btn"
+                                class="btn-secondary hidden"
+                                aria-label="Switch between front and rear camera"
+                            >
+                                Switch Camera
+                            </button>
+                        </div>
+                        
+                        <!-- Scanner status messages -->
+                        <div 
+                            id="scanner-status" 
+                            class="scanner-status"
+                            role="status"
+                            aria-live="polite"
+                        ></div>
+                        
+                        <!-- Scanner error messages -->
+                        <div 
+                            id="scanner-error" 
+                            class="error-message text-center"
+                            role="alert"
+                            aria-live="assertive"
+                        ></div>
+                        
+                        <!-- Fallback to manual input -->
+                        <div id="scanner-fallback" class="scanner-fallback hidden">
+                            <p>Having trouble scanning? <button type="button" id="fallback-to-manual-btn" class="link-button">Switch to manual entry</button></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tombstone Display Section -->
+        <section id="tombstone-section" class="section hidden" aria-labelledby="tombstone-heading">
+            <h2 id="tombstone-heading">Your Numbers' Fate</h2>
+            <div id="tombstone-container" role="article" aria-label="Historical analysis results">
+                <!-- Tombstone will be rendered here -->
+            </div>
+        </section>
+
+        <!-- Tarot Reading Prompt Section -->
+        <section id="tarot-prompt-section" class="section hidden" aria-labelledby="tarot-prompt-heading">
+            <h2 id="tarot-prompt-heading">Seek Mystical Insight?</h2>
+            <div id="tarot-prompt-container" role="region" aria-label="Tarot reading prompt">
+                <!-- Tarot reading prompt will be displayed here -->
+            </div>
+        </section>
+
+        <!-- Question Collection Section -->
+        <section id="question-section" class="section hidden" aria-labelledby="question-heading">
+            <h2 id="question-heading">Ask Your Question</h2>
+            <div id="question-container" role="form" aria-label="Question input form">
+                <!-- Question input form will be displayed here -->
+            </div>
+        </section>
+
+        <!-- Tarot Card Display Section -->
+        <section id="card-display-section" class="section hidden" aria-labelledby="card-display-heading">
+            <h2 id="card-display-heading">Your Cards</h2>
+            <div id="card-display-container" role="region" aria-label="Selected tarot cards">
+                <!-- Tarot cards will be displayed here -->
+            </div>
+        </section>
+
+        <!-- Fortune Display Section -->
+        <section id="fortune-section" class="section hidden" aria-labelledby="fortune-heading">
+            <h2 id="fortune-heading">Your Fortune</h2>
+            <div id="fortune-container" role="article" aria-label="Generated fortune reading">
+                <!-- Fortune text will be displayed here -->
+            </div>
+        </section>
+    </main>
+
+    <footer role="contentinfo">
+        <nav aria-label="Footer">
+            <a href="#about">About</a>
+            <a href="#privacy">Privacy</a>
+        </nav>
+        <p>For entertainment only. If playing stops being fun, call 1-800-522-4700.</p>
+        <p>&copy; 2025 Lotto Graveyard. Using 1909 Rider-Waite tarot imagery (public domain).</p>
+    </footer>
+
+    <!-- JavaScript modules will be loaded here -->
+    <!-- Tesseract.js for OCR -->
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+    <!-- Seedrandom for deterministic RNG -->
+    <script src="https://cdn.jsdelivr.net/npm/seedrandom@3/seedrandom.min.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/validation.js"></script>
+    <script src="js/input.js"></script>
+    <script src="js/webcam-scanner.js"></script>
+    <script src="js/data-loader.js"></script>
+    <script src="js/analysis.js"></script>
+    <script src="js/tombstone.js"></script>
+    <script src="js/tarot-deck.js"></script>
+    <script src="js/tarot.js"></script>
+    
+    <script src="js/app.js"></script>
+</body>
+</html>

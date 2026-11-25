@@ -127,6 +127,14 @@
         <button type="button" id="copy-link-btn">Copy link</button>
     </div>
 
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay hidden" aria-live="polite" aria-busy="false">
+        <div class="loading-content">
+            <div class="loading-spinner" aria-hidden="true"></div>
+            <p class="loading-status">Loading...</p>
+        </div>
+    </div>
+
     <main role="main" id="main-content">
         <!-- Number Input Section -->
         <section id="input-section" class="section" aria-labelledby="input-heading">
@@ -401,6 +409,7 @@
     <script src="js/tombstone.js"></script>
     <script src="js/tarot-deck.js"></script>
     <script src="js/tarot.js"></script>
+    <script src="js/fortune-client.js"></script>
     
     <script src="js/app-simplified.js"></script>
 </body>
