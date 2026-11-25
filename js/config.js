@@ -5,10 +5,10 @@ const CONFIG = {
     FORTUNE_LAMBDA_URL: 'https://your-function-url.lambda-url.us-east-1.on.aws/',
     
     // Data file path
-    DATA_FILE_PATH: '/data/historical-data.json',
+    DATA_FILE_PATH: 'data/historical-data.json',
     
     // Tarot images path
-    TAROT_IMAGES_PATH: '/assets/tarot',
+    TAROT_IMAGES_PATH: 'assets/tarot',
     
     // Timeouts
     FORTUNE_TIMEOUT_MS: 30000, // 30 seconds
