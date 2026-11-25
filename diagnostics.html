@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lotto Graveyard - Diagnostics</title>
+    <style>
+        body {
+            font-family: monospace;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test {
+            margin: 10px 0;
+            padding: 10px;
+            background: white;
+            border-left: 4px solid #ccc;
+        }
+        .test.pass {
+            border-color: green;
+        }
+        .test.fail {
+            border-color: red;
+        }
+        .error {
+            color: red;
+            font-weight: bold;
+        }
+        h1 { color: #333; }
+        h2 { 
+            color: #666; 
+            margin-top: 30px;
+            border-bottom: 2px solid #333;
+        }
+        pre {
+            background: #eee;
+            padding: 10px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Lotto Graveyard - Diagnostics</h1>
+    <div id="results"></div>
+    
+    <!-- Load all scripts in order -->
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/seedrandom@3/seedrandom.min.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/validation.js"></script>
+    <script src="js/input.js"></script>
+    <script src="js/webcam-scanner.js"></script>
+    <script src="js/data-loader.js"></script>
+    <script src="js/analysis.js"></script>
+    <script src="js/tombstone.js"></script>
+    <script src="js/tarot-deck.js"></script>
+    <script src="js/tarot.js"></script>
+    <script src="js/fortune-client.js"></script>
+    
+    <script>
+        const results = document.getElementById('results');
+        let html = '';
+        
+        // Test 1: Check external libraries
+        html += '<h2>External Libraries</h2>';
+        html += testCheck('Tesseract.js', typeof Tesseract !== 'undefined');
+        html += testCheck('seedrandom', typeof Math.seedrandom === 'function');
+        
+        // Test 2: Check core objects/functions
+        html += '<h2>Core Modules</h2>';
+        html += testCheck('CONFIG', typeof CONFIG !== 'undefined');
+        html += testCheck('validateLotteryNumbers', typeof validateLotteryNumbers === 'function');
+        html += testCheck('clearValidationErrors', typeof clearValidationErrors === 'function');
+        html += testCheck('displayValidationErrors', typeof displayValidationErrors === 'function');
+        
+        // Test 3: Check class definitions
+        html += '<h2>Class Definitions</h2>';
+        html += testCheck('InputModule', typeof InputModule === 'function');
+        html += testCheck('WebcamScanner', typeof WebcamScanner === 'function');
+        html += testCheck('DataLoader', typeof DataLoader === 'function');
+        html += testCheck('HistoricalAnalysis', typeof HistoricalAnalysis === 'function');
+        html += testCheck('TombstoneRenderer', typeof TombstoneRenderer === 'function');
+        html += testCheck('TarotModule', typeof TarotModule === 'function');
+        html += testCheck('FortuneClient', typeof FortuneClient === 'function');
+        
+        // Test 4: Check TAROT_DECK data
+        html += '<h2>Data Assets</h2>';
+        html += testCheck('TAROT_DECK defined', typeof TAROT_DECK !== 'undefined');
+        if (typeof TAROT_DECK !== 'undefined') {
+            html += testCheck('TAROT_DECK is array', Array.isArray(TAROT_DECK));
+            html += testCheck('TAROT_DECK has 78 cards', TAROT_DECK.length === 78);
+        }
+        
+        // Test 5: Check CONFIG values
+        html += '<h2>Configuration</h2>';
+        if (typeof CONFIG !== 'undefined') {
+            html += `<div class="test"><strong>DATA_FILE_PATH:</strong> ${CONFIG.DATA_FILE_PATH}</div>`;
+            html += `<div class="test"><strong>TAROT_IMAGES_PATH:</strong> ${CONFIG.TAROT_IMAGES_PATH}</div>`;
+            html += `<div class="test"><strong>FORTUNE_LAMBDA_URL:</strong> ${CONFIG.FORTUNE_LAMBDA_URL}</div>`;
+        }
+        
+        // Test 6: Try to instantiate classes
+        html += '<h2>Class Instantiation</h2>';
+        try {
+            new DataLoader();
+            html += testCheck('DataLoader instance', true);
+        } catch (e) {
+            html += testCheck('DataLoader instance', false, e.message);
+        }
+        
+        try {
+            new HistoricalAnalysis();
+            html += testCheck('HistoricalAnalysis instance', true);
+        } catch (e) {
+            html += testCheck('HistoricalAnalysis instance', false, e.message);
+        }
+        
+        try {
+            new TombstoneRenderer();
+            html += testCheck('TombstoneRenderer instance', true);
+        } catch (e) {
+            html += testCheck('TombstoneRenderer instance', false, e.message);
+        }
+        
+        try {
+            new TarotModule();
+            html += testCheck('TarotModule instance', true);
+        } catch (e) {
+            html += testCheck('TarotModule instance', false, e.message);
+        }
+        
+        try {
+            new FortuneClient();
+            html += testCheck('FortuneClient instance', true);
+        } catch (e) {
+            html += testCheck('FortuneClient instance', false, e.message);
+        }
+        
+        try {
+            new InputModule();
+            html += testCheck('InputModule instance', true);
+        } catch (e) {
+            html += testCheck('InputModule instance', false, e.message);
+        }
+        
+        // Test 7: Try to load data
+        html += '<h2>Data Loading Test</h2>';
+        const loader = new DataLoader();
+        loader.loadHistoricalData()
+            .then(data => {
+                const dataHtml = testCheck('Historical data loaded', true) + 
+                    `<div class="test pass"><strong>Total drawings:</strong> ${data.totalDrawings}<br>` +
+                    `<strong>Last updated:</strong> ${data.lastUpdated}</div>`;
+                document.getElementById('data-test').innerHTML = dataHtml;
+            })
+            .catch(error => {
+                const errorHtml = testCheck('Historical data loaded', false, error.message);
+                document.getElementById('data-test').innerHTML = errorHtml;
+            });
+        
+        html += '<div id="data-test"><div class="test">Loading data...</div></div>';
+        
+        results.innerHTML = html;
+        
+        function testCheck(name, passed, error = '') {
+            const className = passed ? 'pass' : 'fail';
+            const symbol = passed ? '✓' : '✗';
+            const errorMsg = error ? `<br><span class="error">Error: ${error}</span>` : '';
+            return `<div class="test ${className}"><strong>${symbol} ${name}</strong>${errorMsg}</div>`;
+        }
+    </script>
+</body>
+</html>
